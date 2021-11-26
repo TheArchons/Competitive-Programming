@@ -5,7 +5,6 @@ using namespace std::chrono;
 using namespace std;
 
 int main() {
-    auto start = high_resolution_clock::now();
     string flips;
     int hFlips = 0, vFlips = 0;
     bool h = false, v = false;
@@ -36,6 +35,4 @@ int main() {
     else {
         cout << "1 2" << endl << "3 4";
     }
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
 }
