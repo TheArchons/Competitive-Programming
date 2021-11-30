@@ -621,3 +621,5 @@ Junior/2017/WINDOWS/senior_data/s5/s5.sample.01.in
 Junior/2017/WINDOWS/senior_data/s5/s5.sample.01.out
 Junior/2017/WINDOWS/senior_data/s5/s5.sample.02.in
 Junior/2017/WINDOWS/senior_data/s5/s5.sample.02.out
+*.out
+*.in

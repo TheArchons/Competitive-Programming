@@ -20,6 +20,15 @@
     "iosfwd": "cpp",
     "*.tcc": "cpp",
     "ostream": "cpp",
-    "chrono": "cpp"
+    "chrono": "cpp",
+    "barrier": "cpp",
+    "random": "cpp",
+    "latch": "cpp",
+    "limits": "cpp",
+    "semaphore": "cpp",
+    "valarray": "cpp",
+    "cmath": "cpp",
+    "string": "cpp",
+    "istream": "cpp"
   }
 }
