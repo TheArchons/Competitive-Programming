@@ -81,7 +81,7 @@ vector<string> DFSSubstitutions(unordered_map<string, pair<string, int>> replace
     int stepCount = 0;
     tuple<int, int, string, string> tempTuple;
     while((current != endStr) || (stepCount != steps)) {
-        tuple<int, int, string> tempTuple = findReplaceable(current, replaceable, lengths, cannotReplace[stepCount + 1]);
+        tuple<int, int, string> tempTuple = findReplaceable(current, replaceable, lengths, cannotReplace[stepCount  + 1]);
         if (get<0>(tempTuple) != 0 && stepCount != steps) {
             stepCount++;
             current.erase(get<1>(tempTuple), get<2>(tempTuple).length());
@@ -92,6 +92,7 @@ vector<string> DFSSubstitutions(unordered_map<string, pair<string, int>> replace
             continue;
         }
         //Reverses back by one
+        cannotReplace[stepCount+1].clear();
         stepCount--;
         prevStrings.pop();
         current = prevStrings.top();
