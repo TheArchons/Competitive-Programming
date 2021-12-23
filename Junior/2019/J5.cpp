@@ -50,7 +50,6 @@ tuple<int, string, string> takeIn2() { // takes inputs for steps, start, and end
 }
 
 tuple<int, int, string> findReplaceable(string currString, unordered_map<string, pair<string, int>> replaceable, unordered_set<int> lengths, vector<pair<string, int>> cantReplace) { //Possibility of this not functioning
-    //Somehow doesn't check all the possibilities
     while(!empty(lengths)) {
         int length = *lengths.begin() - 1;
         lengths.erase(lengths.begin());
@@ -80,7 +79,6 @@ vector<string> DFSSubstitutions(unordered_map<string, pair<string, int>> replace
     stack<string> prevStrings;
     string current = startStr;
     int stepCount = 0;
-    prevStrings.push(startStr);
     tuple<int, int, string, string> tempTuple;
     while((current != endStr) || (stepCount != steps)) {
         tuple<int, int, string> tempTuple = findReplaceable(current, replaceable, lengths, cannotReplace[stepCount + 1]);
@@ -96,7 +94,6 @@ vector<string> DFSSubstitutions(unordered_map<string, pair<string, int>> replace
         //Reverses back by one
         stepCount--;
         prevStrings.pop();
-        cout << prevStrings.top() << endl;
         current = prevStrings.top();
         visited.pop_back();
     }
