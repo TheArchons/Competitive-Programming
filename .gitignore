@@ -623,3 +623,13 @@ Junior/2017/WINDOWS/senior_data/s5/s5.sample.02.in
 Junior/2017/WINDOWS/senior_data/s5/s5.sample.02.out
 *.out
 *.in
+.vscode/tasks.json
+*.json
+*.json
+Junior/2019/J4V2
+Junior/2020/J4
+*.json
+.vscode/c_cpp_properties.json
+.vscode/c_cpp_properties.json
+Junior/2020/J5
+Junior/2021/CPP/J4
