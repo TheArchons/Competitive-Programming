@@ -633,3 +633,6 @@ Junior/2020/J4
 .vscode/c_cpp_properties.json
 Junior/2020/J5
 Junior/2021/CPP/J4
+*.json
+.vscode/c_cpp_properties.json
+.vscode/launch.json
