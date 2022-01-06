@@ -1,58 +1,58 @@
 #include <iostream>
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <bits/stdc++.h>
 using namespace std;
 
-pair<int, int> maxCombos(int ins[], int length) {
-    int max, maxes; //max number of combos, combos that are max length
-    max = maxes = 0;
-    unordered_map<int, int> combos; //maps number of combos to the number of times it appears
-    char prevChar;
-    for(int i = 0; i < length; i++) {
-        if (ins[i] == prevChar) { //if the current character is the same as the previous one
-            continue; //skip it
-        }
-        prevChar = ins[i];
-        for(int j = i+1; j < length; j++) {
-            int sum = ins[i] + ins[j];
-            if(!combos.count(sum)) { //creates a new entry if it doesn't exist
-                combos[sum] = 1;
+pair<int, int> findMax(vector<int> nums, int length) {
+    int maxVal, maxesCount, currIndex;
+    maxVal = maxesCount = currIndex = 0;
+    unordered_map<int, int> maxes;
+    for (int i = 0; i < length; i++) {
+        vector<int> numClone = nums;
+        int currI = nums.at(i);
+        for(int j = 0; !empty(numClone); j++) {
+            int currVal = numClone.front();
+            numClone.erase(numClone.begin());
+            if (j == i || currI < currVal) {
+                continue;
             }
-            else { //if it does exist, increment it
-                combos[sum]++;
+            int comboVal = currVal + currI;
+            if (maxes.count(comboVal)) {
+                maxes[comboVal]++;
+            } else {
+                maxes[comboVal] = 1;
             }
-            if(combos[sum] > max) { //if the current number of combos is greater than the max, update max
-                max = combos[sum];
-                maxes = 1;
-            }
-            else if(combos[sum] == max) { //if the current number of combos is equal to the max, update maxes
-                maxes++;
+            if (maxes[comboVal] > maxVal) {
+                maxVal = maxes[comboVal];
+                maxesCount = 1;
+            } else if (maxes[comboVal] == maxVal) {
+                maxesCount++;
             }
         }
     }
-    return make_pair(max, maxes);
+    return make_pair(maxVal, maxesCount);
 }
 
 int main() {
-    string temp;
     int length;
+    string temp;
     getline(cin, temp);
     length = stoi(temp);
-    int ins[length];
+    vector<int> nums;
     getline(cin, temp);
-    //split temp into ins
-    for (int i = 0; i < length; i++) {
-        ins[i] = stoi(temp.substr(0, temp.find(' ')));
-        temp = temp.substr(temp.find(' ') + 1);
+    //split the string into a vector of ints by spaces
+    for(int i = 0; i < temp.length(); i++) {
+        if(temp[i] == ' ') {
+            nums.push_back(stoi(temp.substr(0, i)));
+            temp = temp.substr(i + 1);
+            i = 0;
+        }
     }
-    sort(ins, ins+length);
-    if(ins[0] == ins[length-1]) { //if all the numbers are the same
-        cout << length << " " << 1;
-        return 0;
-    }
-    pair<int, int> combos = maxCombos(ins, length);
-    cout << combos.first << " " << combos.second;
+    //add the last number
+    nums.push_back(stoi(temp));
+    pair<int, int> max = findMax(nums, length);
+    cout << max.first << " " << max.second;
     return 0;
 }
