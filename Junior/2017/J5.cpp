@@ -61,16 +61,27 @@ int main() {
     length = stoi(temp);
     vector<int> nums;
     getline(cin, temp);
+    bool moreThan1Uniques = false;
     //split the string into a vector of ints by spaces
     for(int i = 0; i < temp.length(); i++) {
         if(temp[i] == ' ') {
             nums.push_back(stoi(temp.substr(0, i)));
             temp = temp.substr(i + 1);
             i = 0;
+            if (nums.back() != nums.front()) {
+                moreThan1Uniques = true;
+            }
         }
     }
     //add the last number
     nums.push_back(stoi(temp));
+    if (nums.back() != nums.front()) {
+        moreThan1Uniques = true;
+    }
+    if (!moreThan1Uniques) {
+        cout << length/2 << " " << 1;
+        return 0;
+    }
     pair<int, int> max = findMax(nums, length);
     cout << max.first << " " << max.second;
     return 0;
