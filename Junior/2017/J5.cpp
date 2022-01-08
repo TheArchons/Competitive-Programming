@@ -22,13 +22,13 @@ pair<int, int> findMax(vector<int> nums, int length) {
     unordered_map<int, int> maxes;
     unordered_map<int, vector<int>> numMap;
     for (int i = 0; i < length; i++) {
-        vector<int> numClone = nums;
+        //vector<int> numClone = nums;
         unordered_set<int> numsUsed; // set of numbers used
         int currI = nums.at(i);
-        for(int j = 0; !empty(numClone); j++) {
-            int currVal = numClone.front();
-            numClone.erase(numClone.begin());
-            //if (j <= i || currI < currVal) {
+        for(int j = 0; j < length; j++) {
+            /*int currVal = numClone.front();
+            numClone.erase(numClone.begin());*/
+            int currVal = nums.at(j);
             if (j <= i) {
                 continue;
             }
@@ -66,6 +66,7 @@ int main() {
     //charString to int
     length = atoi(cs);
     vector<int> nums;
+    nums.reserve(length);
     bool moreThan1Uniques = false;
     //split input by spaces into nums with getchar
     index = 0;
