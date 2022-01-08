@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstring>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -55,34 +55,48 @@ pair<int, int> findMax(vector<int> nums, int length) {
 }
 
 int main() {
+    int index = 0;
+    char c, cs[7];
     int length;
-    string temp;
-    getline(cin, temp);
-    length = stoi(temp);
+    do {
+        c = getchar();
+        cs[index] = c;
+        index++;
+    } while (c != '\n');
+    //charString to int
+    length = atoi(cs);
     vector<int> nums;
-    getline(cin, temp);
     bool moreThan1Uniques = false;
-    //split the string into a vector of ints by spaces
-    for(int i = 0; i < temp.length(); i++) {
-        if(temp[i] == ' ') {
-            nums.push_back(stoi(temp.substr(0, i)));
-            temp = temp.substr(i + 1);
-            i = 0;
+    //split input by spaces into nums with getchar
+    index = 0;
+    char input[10];
+    c = getchar();
+    if(c == '\n') {
+        putchar('a');
+    }
+    while (c != '\n') {
+        if (c == ' ') {
+            nums.push_back(atoi(input));
+            memset(input, 0, sizeof input);
+            index = 0;
             if (nums.back() != nums.front()) {
                 moreThan1Uniques = true;
-            }
+            }   
         }
+        input[index] = c;
+        index++;
+        c = getchar();
+
     }
-    //add the last number
-    nums.push_back(stoi(temp));
+    nums.push_back(atoi(input));
     if (nums.back() != nums.front()) {
         moreThan1Uniques = true;
     }
     if (!moreThan1Uniques) {
-        cout << length/2 << " " << 1;
+        printf("%d %d\n", length/2, 1);
         return 0;
     }
     pair<int, int> max = findMax(nums, length);
-    cout << max.first << " " << max.second;
+    printf("%d %d", max.first, max.second);
     return 0;
 }
