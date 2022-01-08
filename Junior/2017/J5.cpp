@@ -20,7 +20,7 @@ pair<int, int> findMax(vector<int> nums, int length) {
     int maxVal, maxesCount, currIndex;
     maxVal = maxesCount = currIndex = 0;
     unordered_map<int, int> maxes;
-    unordered_map<int, vector<int>> numMap;
+    unordered_set<int> usedNums[30000];
     for (int i = 0; i < length; i++) {
         //vector<int> numClone = nums;
         unordered_set<int> numsUsed; // set of numbers used
@@ -33,11 +33,11 @@ pair<int, int> findMax(vector<int> nums, int length) {
                 continue;
             }
             int comboVal = currVal + currI;
-            if (vectorSearch(numMap[j], comboVal) || vectorSearch(numMap[i], comboVal)) {
+            if (usedNums[i].find(comboVal) != usedNums[i].end() || usedNums[j].find(comboVal) != usedNums[j].end()) {
                 continue;
             }
-            numMap[j].push_back(comboVal);
-            numMap[i].push_back(comboVal);
+            usedNums[i].insert(comboVal);
+            usedNums[j].insert(comboVal);
             if (maxes.count(comboVal)) {
                 maxes[comboVal]++;
             } else {
