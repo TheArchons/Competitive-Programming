@@ -20,24 +20,20 @@ pair<int, int> findMax(vector<int> nums, int length) {
     int maxVal, maxesCount, currIndex;
     maxVal = maxesCount = currIndex = 0;
     unordered_map<int, int> maxes;
-    unordered_set<int> usedNums[30000];
+    bool usedNums[20000][4000];
     for (int i = 0; i < length; i++) {
-        //vector<int> numClone = nums;
         unordered_set<int> numsUsed; // set of numbers used
         int currI = nums.at(i);
         for(int j = 0; j < length; j++) {
-            /*int currVal = numClone.front();
-            numClone.erase(numClone.begin());*/
             int currVal = nums.at(j);
             if (j <= i) {
                 continue;
             }
             int comboVal = currVal + currI;
-            if (usedNums[i].find(comboVal) != usedNums[i].end() || usedNums[j].find(comboVal) != usedNums[j].end()) {
+            if (usedNums[i][comboVal] || usedNums[j][comboVal]) {
                 continue;
             }
-            usedNums[i].insert(comboVal);
-            usedNums[j].insert(comboVal);
+            usedNums[i][comboVal] = usedNums[j][comboVal] = true;
             if (maxes.count(comboVal)) {
                 maxes[comboVal]++;
             } else {
