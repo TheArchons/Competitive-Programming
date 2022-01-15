@@ -16,16 +16,16 @@ bool vectorSearch(vector<int> v, int element) {
     return false;
 }
 
-pair<int, int> findMax(vector<int> nums, int length) {
+pair<int, int> findMax(int nums[100000], int length, int repeatingNums[100000], int repeatingNumLen) {
     int maxVal, maxesCount, currIndex;
     maxVal = maxesCount = currIndex = 0;
     unordered_map<int, int> maxes;
     bool usedNums[20000][4000];
     for (int i = 0; i < length; i++) {
         unordered_set<int> numsUsed; // set of numbers used
-        int currI = nums.at(i);
+        int currI = nums[i];
         for(int j = 0; j < length; j++) {
-            int currVal = nums.at(j);
+            int currVal = nums[j];
             if (j <= i) {
                 continue;
             }
@@ -47,11 +47,31 @@ pair<int, int> findMax(vector<int> nums, int length) {
             }
         }
     }
+    for(int i = 0; i < repeatingNumLen; i++) {
+        if (repeatingNums[i] > 1) {
+            for (int j = 0; j < repeatingNumLen; j++) {
+                if (i == j || repeatingNums[j] <= 1) {
+                    continue;
+                }
+                int comboVal = i+j;
+                int minVal = min(repeatingNums[i], repeatingNums[j]);
+                maxes[comboVal] += minVal-1;
+                if (maxes[comboVal] > maxVal) {
+                    maxVal = maxes[comboVal];
+                    maxesCount = 1;
+                } else if (maxes[comboVal] == maxVal) {
+                    maxesCount++;
+                }
+            }
+        }
+    }
     return make_pair(maxVal, maxesCount);
 }
 
 int main() {
     int index = 0;
+    int numsIndex = 0;
+    int repeatingNumLen = 0;
     char c, cs[7];
     int length;
     do {
@@ -61,8 +81,7 @@ int main() {
     } while (c != '\n');
     //charString to int
     length = atoi(cs);
-    vector<int> nums;
-    nums.reserve(length);
+    int nums[100000] = {0};
     bool moreThan1Uniques = false;
     //split input by spaces into nums with getchar
     index = 0;
@@ -71,29 +90,39 @@ int main() {
     if(c == '\n') {
         putchar('a');
     }
+    int repeatingNums[100000] = {0};
     while (c != '\n') {
         if (c == ' ') {
-            nums.push_back(atoi(input));
+            int intPut = atoi(input);
+            if (repeatingNums[intPut] != 0) {
+                repeatingNums[intPut]++;
+                c = getchar();
+                continue;
+            }
+            repeatingNums[intPut] = 1;
+            repeatingNumLen++;
+            nums[numsIndex] = intPut;
             memset(input, 0, sizeof input);
             index = 0;
-            if (nums.back() != nums.front()) {
+            if (nums[numsIndex] != nums[0]) {
                 moreThan1Uniques = true;
-            }   
+            }
+            numsIndex++;
         }
         input[index] = c;
         index++;
         c = getchar();
 
     }
-    nums.push_back(atoi(input));
-    if (nums.back() != nums.front()) {
+    nums[numsIndex] = atoi(input);
+    if (nums[numsIndex] != nums[0]) {
         moreThan1Uniques = true;
     }
     if (!moreThan1Uniques) {
         printf("%d %d\n", length/2, 1);
         return 0;
     }
-    pair<int, int> max = findMax(nums, length);
+    pair<int, int> max = findMax(nums, length, repeatingNums, repeatingNumLen);
     printf("%d %d", max.first, max.second);
     return 0;
 }
