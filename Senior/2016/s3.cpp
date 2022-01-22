@@ -68,8 +68,8 @@ int main(){
     //      up again
 
     // print tree
-    cout << endl;
-    print2dVec(tree);
+    //cout << endl;
+    //print2dVec(tree);
     int head,tail;
     tail = head = shopLocations[0];
     shopLocations.erase(shopLocations.begin());
@@ -95,7 +95,7 @@ int main(){
                     }
                     if(!isShop(shopLocations,visitedTree[curr][i])){
                         toVisit.push_back(visitedTree[curr][i]); //add to queue and mark as visited
-                        visitedTree[curr][i] = -1;
+                        visitedTree[curr][i] =  -1;
                     }
                     else{
                         head = visitedTree[curr][i]; //found head, so assign it
@@ -114,15 +114,15 @@ int main(){
                 break;
             }
             if (!toVisit.empty()) {
+                hToVisit.pop();
                 hToVisit.push(toVisit);
                 toVisit.clear();
             }
-            hToVisit.pop();
             while(!tToVisit.front().empty()) { //bfs one layer for tail
                 curr = tToVisit.front().front();
                 tToVisit.front().erase(tToVisit.front().begin());
                 for(int i = 0; i < visitedTree[curr].size(); i++){
-                    if (visitedTree[curr][i] == -1) {
+                    if (visitedTree[curr][i] == -1 || visitedTree[curr][i] == tail || visitedTree[curr][i] == head) {
                         continue;
                     }
                     if(!isShop(shopLocations,visitedTree[curr][i])){
@@ -146,13 +146,14 @@ int main(){
                 break;
             }
             if (!toVisit.empty()) {
+                tToVisit.pop();
                 tToVisit.push(toVisit);
                 toVisit.clear();
             }
-            tToVisit.pop();
+            //pop tToVisit if not empty
             steps++;
         }
     }
-    cout << head << endl << steps;
+    cout << steps;
     return 0;
 }
