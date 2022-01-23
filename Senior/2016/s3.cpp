@@ -28,8 +28,8 @@ void printQueue(queue<int> q){
     cout << endl;
 }
 
-bool isShop(vector<int> shops, int i){
-    //quicksearch for shop
+bool isShop(vector<int> shops, int i){ //IMPROVE IF TLE
+    //search for shop
     for(int j = 0; j < shops.size(); j++){
         if(shops[j] == i){
             return true;
@@ -77,6 +77,7 @@ int main(){
     //bfs to find head
 
     while(!shopLocations.empty()){
+        //cout << endl;
         queue<vector<int>> hToVisit, tToVisit; //head and tail to visit. Vector to keep track of steps
         hToVisit.push({head}); tToVisit.push({tail});
         int curr = hToVisit.front().front();
@@ -85,7 +86,8 @@ int main(){
         bool foundShop = false;
         //bool foundHShop, foundTShop;
         //foundHShop = foundTShop = false;
-        while (true){
+        while (true){ //while we have not found a shop
+            steps++;
             while(!hToVisit.front().empty()) { //bfs one layer for head
                 curr = hToVisit.front().front();
                 hToVisit.front().erase(hToVisit.front().begin());
@@ -95,6 +97,13 @@ int main(){
                     }
                     if(!isShop(shopLocations,visitedTree[curr][i])){
                         toVisit.push_back(visitedTree[curr][i]); //add to queue and mark as visited
+                        //prevent going back
+                        for (int j = 0; j < visitedTree[visitedTree[curr][i]].size(); j++) {
+                            if (visitedTree[visitedTree[curr][i]][j] == curr) {
+                                visitedTree[visitedTree[curr][i]][j] = -1;
+                            }
+                        }
+                        //cout << "visited " << visitedTree[curr][i] << endl;
                         visitedTree[curr][i] =  -1;
                     }
                     else{
@@ -102,7 +111,7 @@ int main(){
                         shopLocations.erase(find(shopLocations.begin(),shopLocations.end(),head));
                         //foundHShop = true;
                         foundShop = true;
-                        steps++;
+                        //steps++;
                         break;
                     }
                 }
@@ -111,13 +120,18 @@ int main(){
                 }
             }
             if (foundShop) {
+                //cout << head << endl;
                 break;
             }
+            hToVisit.pop();
             if (!toVisit.empty()) {
-                hToVisit.pop();
                 hToVisit.push(toVisit);
                 toVisit.clear();
             }
+            else {
+                hToVisit.push({head});
+            }
+            //I probably should've used a function here
             while(!tToVisit.front().empty()) { //bfs one layer for tail
                 curr = tToVisit.front().front();
                 tToVisit.front().erase(tToVisit.front().begin());
@@ -127,13 +141,19 @@ int main(){
                     }
                     if(!isShop(shopLocations,visitedTree[curr][i])){
                         toVisit.push_back(visitedTree[curr][i]); //add to queue and mark as visited
+                        for (int j = 0; j < visitedTree[visitedTree[curr][i]].size(); j++) {
+                            if (visitedTree[visitedTree[curr][i]][j] == curr) {
+                                visitedTree[visitedTree[curr][i]][j] = -1;
+                            }
+                        }
+                        //cout << "visited " << visitedTree[curr][i] << endl;
                         visitedTree[curr][i] = -1;
                     }
                     else{
                         tail = visitedTree[curr][i]; //found tail, so assign it
                         shopLocations.erase(find(shopLocations.begin(),shopLocations.end(),tail));
                         //foundTShop = true;
-                        steps++;
+                        //steps++;
                         foundShop = true;
                         break;
                     }
@@ -143,15 +163,20 @@ int main(){
                 }
             }
             if (foundShop) {
+                //cout << tail << endl;
                 break;
             }
+            tToVisit.pop();
             if (!toVisit.empty()) {
-                tToVisit.pop();
                 tToVisit.push(toVisit);
                 toVisit.clear();
             }
+            else {
+                tToVisit.push({tail});
+            }
             //pop tToVisit if not empty
-            steps++;
+            
+            //cout << "steps: " << steps << endl;
         }
     }
     cout << steps;
