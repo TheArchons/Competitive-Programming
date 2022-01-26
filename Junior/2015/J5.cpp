@@ -25,9 +25,9 @@ int main() {
                 }
                 //check for sharing validity
                 bool invalid = false;
-                 for (int z = j; z <= i; z++) {
+                for (int z = j; z <= i; z++) {
                     if (z+1 >= sizeof(pies)/sizeof(pies[0])) continue;
-                    if (pies[z] + 1 > pies[z+1]-1) {
+                    if (pies[z] + 1 > pies[z+1] || pies[z]+1 > pies[i]-1) {
                         //cout << "invalid" << endl;
                         invalid = true;
                         break;
