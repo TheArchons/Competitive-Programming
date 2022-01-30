@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <limits>
 
 using namespace std;
 
@@ -9,7 +10,7 @@ int main() {
     scanf("%d %d", &s1Len, &s2Len);
     string s1, s2;
     cin >> s1 >> s2;
-    unordered_map<char, int> s1Map, s2Map;
+    unordered_map<char, int> s1Map;
     int total, max;
     max = total = 0;
     for (char c : s1) {
@@ -20,17 +21,13 @@ int main() {
     }
     for (char c : s2) {
         total += s1Map[c];
-        s2Map[c] += s1Map[c];
     }
-    int min = 1000000;
-    //minimum in s2Map
+    int min = numeric_limits<int>::max();
     for (char c : s2) {
         if (s1Map[c] < min) {
             min = s1Map[c];
         }
     }
-    if (min < max) {
-        total += max-min;
-    }
+    total += max-min;
     printf("%d\n", total);
 }
