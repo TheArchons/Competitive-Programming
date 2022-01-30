@@ -42,15 +42,25 @@ int main() {
         }
         total++;
         //atempt to distribute up
+        next:
         for (int i = 0; i < peopleCount-2; i++) {
-            if (distVec[i-1] < distVec[i] && distVec[i+1] < distVec[i+2] && distVec[i] > 1) {
+            for (int j = peopleCount-2; j > i; j--) {
+                if (((i == 0 && distVec[i] > 1) || distVec[i-1] < distVec[i]) && distVec[j] < distVec[j+1]) {
+                    //printVec(distVec);
+                    distVec[i]--;
+                    distVec[j]++;
+                    total++;
+                    goto next;
+                }
+            }
+            /*if (distVec[i-1] < distVec[i] && distVec[i+1] < distVec[i+2] && distVec[i] > 1) {
                 printVec(distVec);
                 distVec[i]--;
                 distVec[i+1]++;
                 total++;
-            }
+            }*/
         }
-        printVec(distVec);
+        //printVec(distVec);
     }
     printf("%d\n", total);
     return 0;
