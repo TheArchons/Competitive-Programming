@@ -131,7 +131,7 @@ int main(){
             else {
                 hToVisit.push({head});
             }
-            //I probably should've used a function here
+            //I probably should've used a function
             while(!tToVisit.front().empty()) { //bfs one layer for tail
                 curr = tToVisit.front().front();
                 tToVisit.front().erase(tToVisit.front().begin());
