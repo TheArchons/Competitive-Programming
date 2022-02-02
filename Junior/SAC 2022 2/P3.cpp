@@ -5,7 +5,8 @@
 using namespace std;
 
 int main() {
-    int contestCount, rank;
+    int contestCount, rank, maxRank;
+    maxRank = 0;
     scanf("%d %d", &contestCount, &rank);
     tuple<int, int, int> contests[contestCount]; //skipPos, nextPos, score
     for (int i = 0; i < contestCount; i++) {
@@ -14,32 +15,61 @@ int main() {
         contests[i] = make_tuple(skipPos-1, nextPos-1, score);
     }
 
-
-    stack<pair<int, int>> path;
-    path.push(make_pair(1, get<2>(contests[0])));
+    stack<tuple<int, int, bool>> path; //pos, score, isSkip
+    path.push(make_tuple(1, get<2>(contests[0]), false));
     while(!path.empty()) {
-        if (get<0>(contests[path.top().first]) == -1) {
-            if (path.top().first == -1) {
-                rank -= path.top().second;
+        if (get<0>(contests[get<0>(path.top())]) == -1) {
+            if (get<0>(path.top()) == -1) {
+                bool isSkip = get<2>(path.top());
+                rank -= get<1>(path.top());
                 path.pop();
+                if (isSkip) {
+                    get<1>(contests[get<0>(path.top())]) = -1;
+                }
+                else {
+                    get<0>(contests[get<0>(path.top())]) = -1;
+                }
             }
-            else if (get<1>(contests[path.top().first]) > contestCount-1) {
+            else if (get<1>(contests[get<0>(path.top())]) > contestCount-1) {
                 //out of bounds
-                rank += path.top().second;
-                return -1;
+                bool isSkip = get<2>(path.top());
+                rank += get<1>(path.top());
+                if (rank > maxRank) {
+                    maxRank = rank;
+                }
+                //backtrack
+                rank -= get<1>(path.top());
+                path.pop();
+                if (isSkip) {
+                    get<1>(contests[get<0>(path.top())]) = -1;
+                }
+                else {
+                    get<0>(contests[get<0>(path.top())]) = -1;
+                }
             }
             else {
-                path.push(make_pair(get<1>(contests[path.top().first]), get<2>(contests[path.top().first])));
+                path.push(make_tuple(get<1>(contests[get<0>(path.top())]), get<2>(contests[get<0>(path.top())]), true));
             }
         }
-        else if (path.top().first > contestCount-1) {
+        else if (get<0>(path.top()) > contestCount-1) {
             //out of bounds
-            rank += path.top().second;
-            return -1;
+            bool isSkip = get<2>(path.top());
+            rank += get<1>(path.top());
+            if (rank > maxRank) {
+                maxRank = rank;
+            }
+            rank -= get<1>(path.top());
+            path.pop();
+            if (isSkip) {
+                get<1>(contests[get<0>(path.top())]) = -1;
+            }
+            else {
+                get<0>(contests[get<0>(path.top())]) = -1;
+            }
         }
         else {
-            rank += path.top().second;
-            path.push(make_pair(get<0>(contests[path.top().first]), get<2>(contests[path.top().first])));
+            rank += get<1>(path.top());
+            path.push(make_tuple(get<0>(contests[get<0>(path.top())]), get<2>(contests[get<0>(path.top())]), false));
         }
     }
     return 0;
