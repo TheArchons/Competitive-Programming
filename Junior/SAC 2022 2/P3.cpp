@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <tuple>
-
+//i'm dissapointed in myself for misreading the problem statement
 using namespace std;
 
 int main() {
