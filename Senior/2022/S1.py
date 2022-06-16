@@ -22,7 +22,7 @@ while len(stack) > 0:
 print(sums)"""
 
 # solution 2
-n = int(input())
+"""n = int(input())
 sums = 0
 
 stack = [[0,n//5]]
@@ -44,4 +44,14 @@ while len(stack) > 0:
         if five > 0:
             stack.append([four+1,five-1])
 
+print(sums)"""
+
+#solution 3
+n = int(input())
+sums = 0
+
+fives = n//5
+for i in range(fives+1):
+    if (n-(i*5))%4 == 0:
+        sums += 1
 print(sums)
