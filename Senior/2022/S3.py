@@ -1,11 +1,11 @@
 def goodSampleCount(notes, requiredCount):
     count = 0
     for t in range(len(notes)):
-        h = t
         seen = set()
         for i in range(len(notes) - t):
             if notes[i] in seen:
                 break
+            print(notes[i+t])
             count += 1
             seen.add(notes[i])
     if count == requiredCount:
