@@ -19,25 +19,22 @@ notes = temp[0]
 maxPitch = temp[1]
 goodSamples = temp[2]
 
-if notes == 2 and goodSamples > 0:
+outputArr = [1]*notes
+requiredDiffs = goodSamples-notes
+didBreak = False
+
+if notes <= requiredDiffs or notes > goodSamples:
     print('-1')
 else:
-    outputArr = [1]*notes
-    requiredDiffs = goodSamples-notes
-    didBreak = False
-
-    if notes <= requiredDiffs:
-        print('-1')
+    if requiredDiffs % 2 == 0:
+        for i in range(1, int(requiredDiffs/2)+1, 2):
+            outputArr[i] = 2
     else:
-        if requiredDiffs % 2 == 0:
-            for i in range(1, int(requiredDiffs/2)+1, 2):
-                outputArr[i] = 2
-        else:
-            for i in range(0, math.ceil(requiredDiffs/2)+1, 2):
-                outputArr[i] = 2
+        for i in range(0, math.ceil(requiredDiffs/2)+1, 2):
+            outputArr[i] = 2
 
-        for i in range(len(outputArr)):
-            print(outputArr[i], end=" ")
+    for i in range(len(outputArr)):
+        print(outputArr[i], end=" ")
 
 """Twos = math.floor((goodSamples-notes)/2)
 Ones = notes-Twos
