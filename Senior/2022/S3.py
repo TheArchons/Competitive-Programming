@@ -21,9 +21,7 @@ notes = temp[0]
 maxPitch = temp[1]
 goodSamples = temp[2]
 
-notePosses = []
-for p in itertools.product(range(1, maxPitch + 1), repeat=notes):
-    notePosses.append(p)
+notePosses = itertools.product(range(1, maxPitch + 1), repeat=notes)
 
 didBreak = False
 for i in notePosses:
