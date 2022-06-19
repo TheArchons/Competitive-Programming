@@ -27,10 +27,10 @@ if notes <= requiredDiffs or notes > goodSamples:
     print('-1')
 else:
     if requiredDiffs % 2 == 0:
-        for i in range(1, int(requiredDiffs/2)+1, 2):
+        for i in range(1, int(requiredDiffs/2)*2, 2):
             outputArr[i] = 2
     else:
-        for i in range(0, math.ceil(requiredDiffs/2)+1, 2):
+        for i in range(0, math.ceil(requiredDiffs/2)*2, 2):
             outputArr[i] = 2
 
     for i in range(len(outputArr)):
