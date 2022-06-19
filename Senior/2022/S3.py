@@ -1,3 +1,5 @@
+import itertools
+
 def goodSampleCount(notes, requiredCount):
     count = 0
     for t in range(len(notes)):
@@ -20,13 +22,8 @@ maxPitch = temp[1]
 goodSamples = temp[2]
 
 notePosses = []
-queue = [[1], [2]]
-while len(queue[0]) <= notes:
-    front = queue.pop(0)
-    queue.append(front + [1])
-    queue.append(front + [2])
-    if len(front) == notes:
-        notePosses.append(front)
+for p in itertools.product(range(1, maxPitch + 1), repeat=notes):
+    notePosses.append(p)
 
 didBreak = False
 for i in notePosses:
