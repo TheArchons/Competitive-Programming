@@ -1,14 +1,12 @@
-import itertools
+import math
 
 def goodSampleCount(notes, requiredCount):
     count = 0
     for t in range(len(notes)):
-        seen = set()
-        for i in range(t, len(notes)):
-            if notes[i] in seen:
-                break
+        if t >= len(notes) - 1 or notes[t] == notes[t+1]:
             count += 1
-            seen.add(notes[i])
+        else:
+            count += 2
     if count == requiredCount:
         return True
     else:
@@ -21,18 +19,44 @@ notes = temp[0]
 maxPitch = temp[1]
 goodSamples = temp[2]
 
-notePosses = itertools.product(range(1, maxPitch + 1), repeat=notes)
+if notes == 2 and goodSamples > 0:
+    print('-1')
+else:
+    outputArr = [1]*notes
+    requiredDiffs = goodSamples-notes
+    didBreak = False
 
+    if notes <= requiredDiffs:
+        print('-1')
+    else:
+        if requiredDiffs % 2 == 0:
+            for i in range(1, int(requiredDiffs/2)+1, 2):
+                outputArr[i] = 2
+        else:
+            for i in range(0, math.ceil(requiredDiffs/2)+1, 2):
+                outputArr[i] = 2
+
+        for i in range(len(outputArr)):
+            print(outputArr[i], end=" ")
+
+"""Twos = math.floor((goodSamples-notes)/2)
+Ones = notes-Twos
 didBreak = False
-for i in notePosses:
-    if goodSampleCount(i, goodSamples):
-        for j in range(notes):
-            if j == notes-1:
-                print(i[j])
-            else:
-                print(i[j], end=' ')
-        didBreak = True
+while Ones >=0 and Twos <= Ones:
+    notePosses = itertools.permutations([1]*Ones + [2]*Twos, notes)
+    for i in notePosses:
+        if goodSampleCount(i, goodSamples):
+            for j in range(notes):
+                if j == notes-1:
+                    print(i[j])
+                else:
+                    print(i[j], end=' ')
+            didBreak = True
+            break
+    if didBreak:
         break
+    Ones -= 1
+    Twos += 1
 
 if not didBreak:
-    print('-1')
+    print('-1')"""
