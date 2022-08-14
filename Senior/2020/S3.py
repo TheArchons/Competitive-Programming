@@ -13,7 +13,7 @@ else:
         else:
             needle_counts[letter] = 1
 
-    results = set()
+    results = []
     counts = {}
 
     for i in range(len(needle)):
@@ -23,7 +23,7 @@ else:
             counts[haystack[i]] = 1
 
     if counts == needle_counts:
-        results.add(haystack[0:len(needle)])
+        results.append(0)
 
     counts[haystack[0]] -= 1
     if counts[haystack[0]] == 0:
@@ -39,9 +39,15 @@ else:
             counts[haystack[i+len(needle)-1]] = 1
         if counts == needle_counts:
             #count += 1
-            results.add(haystack[i:i + len(needle)])
+            results.append(i)
         counts[haystack[i]] -= 1
         if counts[haystack[i]] == 0:
             del counts[haystack[i]]
 
-    print(len(results))
+    # remove duplicates
+    removes = set()
+    for i in range(len(results)):
+        for j in range(i+1, len(results)):
+            if haystack[results[i]:results[i]+len(needle)] == haystack[results[j]:results[j]+len(needle)]:
+                removes.add(j)
+    print(len(results) - len(removes))
