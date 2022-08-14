@@ -1,5 +1,3 @@
-import json
-
 needle = input()
 haystack = input()
 
@@ -22,6 +20,8 @@ for i in range(len(haystack) - len(needle) + 1):
         if letter in counts:
             counts[letter] += 1
         else:
+            if letter not in needle_counts:
+                break
             counts[letter] = 1
     if counts == needle_counts:
         results.add(haystack[i:i + len(needle)])
