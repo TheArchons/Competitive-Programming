@@ -1,28 +1,29 @@
+import json
+
 needle = input()
 haystack = input()
+
+# find counts of each letter in the needle
+needle_counts = {}
+for letter in needle:
+    if letter in needle_counts:
+        needle_counts[letter] += 1
+    else:
+        needle_counts[letter] = 1
 
 results = set()
 
 # sliding window
 for i in range(len(haystack) - len(needle) + 1):
-    start = 0
-    find = needle.find(haystack[i])
-    
-    while find != -1:
-        # check if the haystack is a permutation
-        broke = False
-        for j in range(len(needle)):
-            needleVal = find+j
-            if needleVal > len(needle)-1:
-                needleVal -= len(needle)
-            if needle[needleVal] != haystack[i + j]:
-                broke = True
-                break
-        if not broke:
-            results.add(haystack[i:i + len(needle)])
-            break
-        start = find + 1
-        find = needle.find(haystack[i], start)
-    
+    # check if the counts are the same
+    counts = {}
+    for j in range(i, i + len(needle)):
+        letter = haystack[j]
+        if letter in counts:
+            counts[letter] += 1
+        else:
+            counts[letter] = 1
+    if counts == needle_counts:
+        results.add(haystack[i:i + len(needle)])
 
 print(len(results))
