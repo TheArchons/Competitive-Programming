@@ -1,18 +1,28 @@
-from itertools import permutations
-
 needle = input()
 haystack = input()
 
-# all permutations of the needle
-allPermutations = set(permutations(needle))
+results = set()
 
-permCount = 0
-
-# sliding window of the haystack
+# sliding window
 for i in range(len(haystack) - len(needle) + 1):
-    window = tuple(haystack[i:i+len(needle)])
-    if window in allPermutations:
-        permCount += 1
-        allPermutations.remove(window)
-        
-print(permCount)
+    start = 0
+    find = needle.find(haystack[i])
+    
+    while find != -1:
+        # check if the haystack is a permutation
+        broke = False
+        for j in range(len(needle)):
+            needleVal = find+j
+            if needleVal > len(needle)-1:
+                needleVal -= len(needle)
+            if needle[needleVal] != haystack[i + j]:
+                broke = True
+                break
+        if not broke:
+            results.add(haystack[i:i + len(needle)])
+            break
+        start = find + 1
+        find = needle.find(haystack[i], start)
+    
+
+print(len(results))
