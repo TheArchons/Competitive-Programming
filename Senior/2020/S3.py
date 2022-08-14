@@ -8,8 +8,11 @@ allPermutations = set(permutations(needle))
 
 permCount = 0
 
-for needlePermutation in allPermutations:
-    if "".join(needlePermutation) in haystack:
+# sliding window of the haystack
+for i in range(len(haystack) - len(needle) + 1):
+    window = tuple(haystack[i:i+len(needle)])
+    if window in allPermutations:
         permCount += 1
+        allPermutations.remove(window)
         
 print(permCount)
