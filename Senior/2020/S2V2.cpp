@@ -20,34 +20,35 @@ int main() {
             int val;
             scanf("%d", &val);
             room[i][j] = val;
-            poses[val].push_back(make_tuple(i, j));
+
+            // add to poses if it's not the last val
+            if (i + 1 < rows || j + 1 < cols) {
+                poses[val].push_back(make_tuple(i, j));
+            }
         }
     }
 
-    tuple<int, int> curr = make_tuple(rows-1, cols-1);
-
-    set<tuple<int, int>> visited;
+    tuple<int, int> curr = make_tuple(rows-1, cols-1);;
 
     stack<tuple<int, int>> path;
+
+    path.push(curr);
 
     while (curr != make_tuple(0, 0)) {
         int val = room[get<0>(curr)][get<1>(curr)];
         int find = (get<0>(curr) + 1) * (get<1>(curr) + 1);
-        visited.insert(curr);
-        path.push(curr);
 
         bool found = false;
         for (int i = 0; i < poses[find].size(); i++) {
-            // if not visited
-            if (visited.find(poses[find][i]) == visited.end()) {
-                curr = poses[find][i];
-                found = true;
-                break;
-            }
+            curr = poses[find][i];
+            found = true;
+            // remove from poses
+            poses[find].erase(poses[find].begin() + i);
+            break;
         }
 
         if (found) {
-            poses[val].pop_back();
+            path.push(curr);
         } else {
             path.pop();
             if (path.empty()) {
