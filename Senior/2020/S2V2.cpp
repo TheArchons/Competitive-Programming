@@ -32,7 +32,7 @@ int main() {
 
     while (curr != make_tuple(0, 0)) {
         int val = room[get<0>(curr)][get<1>(curr)];
-        int find = get<0>(curr) + 1 * get<1>(curr) + 1;
+        int find = (get<0>(curr) + 1) * (get<1>(curr) + 1);
         visited.insert(curr);
         path.push(curr);
 
@@ -56,11 +56,6 @@ int main() {
             }
             curr = path.top();
         }
-
-
-
-        
-
     }
 
     printf("yes");
