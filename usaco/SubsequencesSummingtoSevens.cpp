@@ -15,25 +15,22 @@ int main() {
         prefix[i] = sum;
     }
 
-    int max = 0;
-    for (int i = n-1; i >= 0; i--) {
-        for (int j = 0; j <= i; j++) {
-            if (i-j < max) {
-                break;
-            }
+    for (int max = n-1; max > 0; max--) {
+        if (!(prefix[max] % 7)) {
+            printf("%d", max+1);
+            return 0;
+        }
 
+        for (int end = n-1; end > max; end--) {
             unsigned long long diff;
-            if (j > 0) {
-                diff = prefix[i] - prefix[j-1];
-            }
-            else {
-                diff = prefix[i];
-            }
-            if (diff % 7 == 0) {
-                max = i - j + 1;
+            diff = prefix[end] - prefix[end - max - 1];
+
+            if (!(diff % 7)) {
+                printf("%d", max+1);
+                return 0;
             }
         }
     }
-
-    printf("%d", max);
+    
+    printf("0");
 }
