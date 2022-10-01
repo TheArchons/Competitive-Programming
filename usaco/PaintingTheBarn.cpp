@@ -27,19 +27,20 @@ int main() {
         int x1, y1, x2, y2;
         scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
 
-        // add to each position
-        for (int j = x1; j < x2; j++) {
-            for (int k = y1; k < y2; k++) {
-                side[j][k]++;
-            }
+        // add markers
+        for (int j = y1; j < y2; j++) {
+            side[x1][j]++;
+            side[x2][j]--;
         }
     }
 
     // read over array and count
     int count = 0;
     for (int i = 0; i < 1000; i++) {
+        int sum = 0;
         for (int j = 0; j < 1000; j++) {
-            if (side[i][j] == k) {
+            sum += side[j][i];
+            if (sum == k) {
                 count++;
             }
         }
