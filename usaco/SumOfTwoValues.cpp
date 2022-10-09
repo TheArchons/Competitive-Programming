@@ -5,7 +5,6 @@
 using namespace std;
 
 int main() {
-    //freopen("twosum.in", "r", stdin); freopen("twosum.out", "w", stdout);
     int arrLen, target;
     scanf("%d %d", &arrLen, &target);
 
