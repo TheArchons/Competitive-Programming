@@ -33,9 +33,11 @@ int main() {
         }
 
         int diff1 = abs(cities[i] - *towerIt);
-        towerIt--;
-        int diff2 = abs(cities[i] - *towerIt);
-        diff1 = max(diff1, diff2);
+        if (towerIt != towers.begin()) {
+            towerIt--;
+            int diff2 = abs(cities[i] - *towerIt);
+            diff1 = min(diff1, diff2);
+        }
         
         if (diff1 > maxRange) {
             maxRange = diff1;
