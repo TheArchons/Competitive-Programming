@@ -1,35 +1,49 @@
 #include<stdio.h>
 #include<set>
+#include<map>
 
 using namespace std;
 
 int main() {
     int x, n;
     scanf("%d %d", &x, &n);
-    set<int> s;
+    set<int> lights;
+    lights.insert(0); lights.insert(x);
+
+    map<int, int> gaps; // gap -> count
 
     for (int i = 0; i < n; i++) {
-        int a;
-        scanf("%d", &a);
-        s.insert(a);
+        int light;
+        scanf("%d", &light);
 
-        int max = 0;
-        max = *s.lower_bound(0);
-        for (set<int>::iterator it = s.begin(); it != s.end(); it++) {
-            if (s.upper_bound(*it) != s.end()) {
-                int temp = *s.upper_bound(*it) - *it;
-                if (temp > max) {
-                    max = temp;
-                }
-            }
-            else {
-                int temp = x - *it;
-                if (temp > max) {
-                    max = temp;
-                }
+        set<int>::iterator it = lights.lower_bound(light);
+        int right = *it;
+        it--;
+        int left = *it;
+
+        int gap = right - left;
+        if (gaps.find(gap) != gaps.end()) {
+            gaps[gap]--;
+            if (gaps[gap] == 0) {
+                gaps.erase(gap);
             }
         }
 
-        printf("%d ", max);
+        lights.insert(light);
+        gap = light - left;
+        if (gaps.find(gap) != gaps.end()) {
+            gaps[gap]++;
+        } else {
+            gaps[gap] = 1;
+        }
+
+        gap = right - light;
+        if (gaps.find(gap) != gaps.end()) {
+            gaps[gap]++;
+        } else {
+            gaps[gap] = 1;
+        }
+
+        printf("%d ", gaps.rbegin()->first);
     }
 }
