@@ -18,7 +18,7 @@ int main() {
 
     sort(tasks, tasks + n);
 
-    int reward; int time;
+    long long int reward; long long int time;
     reward = time = 0;
     for (int i = 0; i < n; i++) {
         int duration = get<0>(tasks[i]);
@@ -29,5 +29,5 @@ int main() {
         reward += deadline - time;
     }
 
-    printf("%d", reward);
+    printf("%lld", reward);
 }
