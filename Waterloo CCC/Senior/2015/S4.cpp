@@ -29,6 +29,8 @@ int main() {
     int start_island, end_island;
     scanf("%d %d", &start_island, &end_island);
 
+    start_island--; end_island--;
+
     int curr_island = start_island;
 
     queue<pair<int, int>> to_visit;
@@ -55,5 +57,5 @@ int main() {
         }
     }
 
-    printf("%d", visits[end_island-1]);
+    printf("%d", visits[end_island]);
 }
