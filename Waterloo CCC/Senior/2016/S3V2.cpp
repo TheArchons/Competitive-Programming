@@ -82,6 +82,11 @@ int main() {
     do {
         for (int i = 0; i < connections[tail].size(); i++) {
             if (dontVisit.find(connections[tail][i]) == dontVisit.end()) {
+                if (phoRestaurants.find(connections[tail][i]) != phoRestaurants.end()) {
+                    if (phoRestaurants[connections[tail][i]]) {
+                        continue;
+                    }
+                }
                 tail = connections[tail][i];
                 dist++;
                 dontVisit.insert(tail);
