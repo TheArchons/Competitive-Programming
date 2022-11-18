@@ -28,25 +28,20 @@ int main() {
         connections[a].push_back(b);
         connections[b].push_back(a);
     }
-
-    if (phoNum == 1) {
-        printf("0");
-        return 0;
-    }
-
     
     int head = phoRestaurants.begin()->first;
-    int tail = connections[head][0]; // TODO properly find tail (must be a pho restaurant)
-
     phoRestaurants[head] = true;
-    phoRestaurants[tail] = true;
+    
 
     // remove all nodes that do not lead to a pho restaurant
     set<int> dontVisit;
     set<int> visited;
-    int curr = head;
     stack<int> path;
+    int curr = head;
     path.push(curr);
+
+    curr = head;
+
     while (!path.empty()) {
         bool found = false;
         int connectionNum = 0;
@@ -80,11 +75,28 @@ int main() {
         }
     }
 
+    // dfs for a pho restaurant, and add dist to the total and set the restaurant to tail
+    // note how it is now guaranteed that the path will arrive at a pho restaurant as long as we dont visit a dontVisit node
+    int tail = head;
+    int dist = 0;
+    do {
+        for (int i = 0; i < connections[tail].size(); i++) {
+            if (dontVisit.find(connections[tail][i]) == dontVisit.end()) {
+                tail = connections[tail][i];
+                dist++;
+                dontVisit.insert(tail);
+                break;
+            }
+        }
+    }
+    while (phoRestaurants.find(tail) == phoRestaurants.end());
+
+    phoRestaurants[tail] = true;
+
     curr = head;
     path = stack<int>();
     path.push(head);
-    int dist, tempDist;
-    dist = tempDist = 0;
+    int tempDist = 0;
     while (!path.empty()) {
         bool continueNow = false;
         for (int i = 0; i < connections[curr].size(); i++) {
@@ -143,6 +155,6 @@ int main() {
         }
     }
 
-    printf("%d", dist+1);
+    printf("%d", dist);
     return 0;
 }
