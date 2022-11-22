@@ -28,20 +28,23 @@ int main() {
         connections[a].push_back(b);
         connections[b].push_back(a);
     }
+
+    if (phoNum == 1) {
+        printf("0");
+        return 0;
+    }
+
     
     int head = phoRestaurants.begin()->first;
+
     phoRestaurants[head] = true;
-    
 
     // remove all nodes that do not lead to a pho restaurant
     set<int> dontVisit;
     set<int> visited;
-    stack<int> path;
     int curr = head;
+    stack<int> path;
     path.push(curr);
-
-    curr = head;
-
     while (!path.empty()) {
         bool found = false;
         int connectionNum = 0;
@@ -74,34 +77,22 @@ int main() {
             curr = path.top();
         }
     }
-
-    // dfs for a pho restaurant, and add dist to the total and set the restaurant to tail
-    // note how it is now guaranteed that the path will arrive at a pho restaurant as long as we dont visit a dontVisit node
-    int tail = head;
-    int dist = 0;
-    do {
-        for (int i = 0; i < connections[tail].size(); i++) {
-            if (dontVisit.find(connections[tail][i]) == dontVisit.end()) {
-                if (phoRestaurants.find(connections[tail][i]) != phoRestaurants.end()) {
-                    if (phoRestaurants[connections[tail][i]]) {
-                        continue;
-                    }
-                }
-                tail = connections[tail][i];
-                dist++;
-                dontVisit.insert(tail);
-                break;
-            }
+    
+    // find the nearest restaurant that isnt in dontVisit
+    int tail;
+    for (int i = 0; i < connections[head].size(); i++) {
+        if (dontVisit.find(connections[head][i]) == dontVisit.end()) {
+            tail = connections[head][i];
+            dontVisit.insert(tail);
+            break;
         }
     }
-    while (phoRestaurants.find(tail) == phoRestaurants.end());
-
-    phoRestaurants[tail] = true;
 
     curr = head;
     path = stack<int>();
     path.push(head);
-    int tempDist = 0;
+    int dist, tempDist;
+    dist = tempDist = 0;
     while (!path.empty()) {
         bool continueNow = false;
         for (int i = 0; i < connections[curr].size(); i++) {
@@ -160,6 +151,6 @@ int main() {
         }
     }
 
-    printf("%d", dist);
+    printf("%d", dist+1);
     return 0;
 }
