@@ -78,79 +78,26 @@ int main() {
         }
     }
     
-    // find the nearest restaurant that isnt in dontVisit
-    int tail;
-    for (int i = 0; i < connections[head].size(); i++) {
-        if (dontVisit.find(connections[head][i]) == dontVisit.end()) {
-            tail = connections[head][i];
-            dontVisit.insert(tail);
-            break;
+    // find a pho restaurant that only has one connection
+    for (int i = 0; i < phoRestaurants.size(); i++) {
+        for (int j = 0; j < connections[i].size(); j++) {
+            if (dontVisit.find(connections[i][j]) == dontVisit.end()) {
+                head = i;
+                break;
+            }
         }
     }
 
+    // find the depth of each subtree
+    map<int, int> depths;
+    
+
+    // dfs until all pho restaurants are visited
+    int dist = 0;
+    visited.clear();
     curr = head;
-    path = stack<int>();
-    path.push(head);
-    int dist, tempDist;
-    dist = tempDist = 0;
-    while (!path.empty()) {
-        bool continueNow = false;
-        for (int i = 0; i < connections[curr].size(); i++) {
-            if (!phoRestaurants[connections[curr][i]] && dontVisit.find(connections[curr][i]) == dontVisit.end()) {
-                curr = connections[curr][i];
-                tempDist++;
-                if (phoRestaurants.find(curr) != phoRestaurants.end()) {
-                    dist += tempDist;
-                    tempDist = 0;
-                }
-                path.push(curr);
-                phoRestaurants[curr] = true;
-                continueNow = true;
-                break;
-            }
-        }
-        if (continueNow) {
-            continue;
-        }
+    path.push(curr);
+    int foundNum = 1;
 
-        path.pop();
-        tempDist++;
-        if (!path.empty()) {
-            curr = path.top();
-        }
-    }
-
-    curr = tail;
-    path = stack<int>();
-    path.push(tail);
-    tempDist = 0;
-    while (!path.empty()) {
-        bool continueNow = false;
-        for (int i = 0; i < connections[curr].size(); i++) {
-            if (!phoRestaurants[connections[curr][i]] && dontVisit.find(connections[curr][i]) == dontVisit.end()) {
-                curr = connections[curr][i];
-                tempDist++;
-                if (phoRestaurants.find(curr) != phoRestaurants.end()) {
-                    dist += tempDist;
-                    tempDist = 0;
-                }
-                path.push(curr);
-                phoRestaurants[curr] = true;
-                continueNow = true;
-                break;
-            }
-        }
-        if (continueNow) {
-            continue;
-        }
-
-        path.pop();
-        tempDist++;
-        if (!path.empty()) {
-            curr = path.top();
-        }
-    }
-
-    printf("%d", dist+1);
     return 0;
 }
