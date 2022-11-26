@@ -44,5 +44,9 @@ int main() {
         }
     }
 
+    if (secondMaxFreqSensor == -20000001) {
+        secondMaxFreqSensor = maxFreqSensor;
+        secondMinFreqSensor = minFreqSensor;
+    }
     printf("%d", max(abs(maxFreqSensor - secondMinFreqSensor), abs(secondMaxFreqSensor - minFreqSensor)));
 }
