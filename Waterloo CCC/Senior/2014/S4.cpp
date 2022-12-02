@@ -3,7 +3,14 @@
 #include <vector>
 using namespace std;
 
-struct box{
+/*
+Store all the boxes in a vector
+Compare each box with the other boxes.
+Save a vector of points where at least one box is present, and one for each section where a box overlaps another
+
+*/
+
+/*struct box{
     int lx, rx, by, ty;
     int tint;
     box(int lx, int rx, int by, int ty, int tint){
@@ -28,4 +35,4 @@ int main() {
     int box1lx, box1rx, box1by, box1ty, box2lx, box2rx, box2by, box2ty, tint;
     
     return 0;
-}
+}*/
