@@ -1,3 +1,5 @@
+# compiled c++
 *.exe
-*.out
-*.in
+
+# CCC test data
+test_data
