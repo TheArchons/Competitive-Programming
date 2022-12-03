@@ -5,24 +5,20 @@
 using namespace std;
 
 int totalWins = 0;
-int plays = 0;
 
 void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::iterator combinationsIt, vector<int> teamScores) {
     if (gamesPlayed == 6) { // all games have been played
-        plays++;
         for (int i = 0; i < 4; i++) {
             if (i == favorite) continue;
-            if (teamScores[i] >= teamScores[favorite]) {
-                return;
-            }
+            if (teamScores[i] >= teamScores[favorite]) return;
         }
         totalWins++;
         return;
     }
 
     pair<int, int> game = *combinationsIt;
-
     combinationsIt++;
+
     teamScores[game.first]++;
     teamScores[game.second]++;
     calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
@@ -34,8 +30,6 @@ void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::it
     teamScores[game.first] -= 3;
     teamScores[game.second] += 3;
     calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
-
-    teamScores[game.second] -= 3;
 
     return;
 }
