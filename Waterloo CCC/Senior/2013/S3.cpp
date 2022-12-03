@@ -5,36 +5,37 @@
 using namespace std;
 
 int totalWins = 0;
+int plays = 0;
 
-void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>> combinations, vector<int> teamScores) {
+void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::iterator combinationsIt, vector<int> teamScores) {
     if (gamesPlayed == 6) { // all games have been played
+        plays++;
         for (int i = 0; i < 4; i++) {
             if (i == favorite) continue;
-            if (teamScores[i] > teamScores[favorite]) return;
+            if (teamScores[i] >= teamScores[favorite]) {
+                return;
+            }
         }
         totalWins++;
         return;
     }
 
-    for (set<pair<int, int>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
-        pair<int, int> game = *it;
+    combinationsIt++;
 
-        combinations.erase(it);
+    pair<int, int> game = *combinationsIt;
+    teamScores[game.first]++;
+    teamScores[game.second]++;
+    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
 
-        teamScores[game.first]++;
-        teamScores[game.second]++;
-        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
+    teamScores[game.first] += 2;
+    teamScores[game.second]--;
+    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
 
-        teamScores[game.first] += 2;
-        teamScores[game.second]--;
-        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
+    teamScores[game.first] -= 3;
+    teamScores[game.second] += 3;
+    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
 
-        teamScores[game.first] -= 2;
-        teamScores[game.second] += 3;
-        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
-
-        combinations.insert(game);
-    }
+    teamScores[game.second] -= 3;
 
     return;
 }
@@ -77,7 +78,7 @@ int main() {
         }
     }
 
-    calculateCombination(gamesPlayed, favorite, combinations, teamScores);
+    calculateCombination(gamesPlayed, favorite, combinations.begin(), teamScores);
     printf("%d", totalWins);
 
     return 0;
