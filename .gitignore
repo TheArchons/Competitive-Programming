@@ -1,5 +1,8 @@
-# compiled c++
+# Compiled c++
 *.exe
 
 # CCC test data
 test_data
+
+# Manual input
+*.input
