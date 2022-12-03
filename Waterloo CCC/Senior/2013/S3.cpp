@@ -20,9 +20,9 @@ void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::it
         return;
     }
 
-    combinationsIt++;
-
     pair<int, int> game = *combinationsIt;
+
+    combinationsIt++;
     teamScores[game.first]++;
     teamScores[game.second]++;
     calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
