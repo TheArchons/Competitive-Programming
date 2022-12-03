@@ -4,29 +4,70 @@
 
 using namespace std;
 
+int totalWins = 0;
+
+void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>> combinations, vector<int> teamScores) {
+    if (gamesPlayed == 6) { // all games have been played
+        for (int i = 0; i < 4; i++) {
+            if (i == favorite) continue;
+            if (teamScores[i] > teamScores[favorite]) return;
+        }
+        totalWins++;
+        return;
+    }
+
+    for (set<pair<int, int>>::iterator it = combinations.begin(); it != combinations.end(); it++) {
+        pair<int, int> game = *it;
+
+        combinations.erase(it);
+
+        teamScores[game.first]++;
+        teamScores[game.second]++;
+        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
+
+        teamScores[game.first] += 2;
+        teamScores[game.second]--;
+        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
+
+        teamScores[game.first] -= 2;
+        teamScores[game.second] += 3;
+        calculateCombination(gamesPlayed + 1, favorite, combinations, teamScores);
+
+        combinations.insert(game);
+    }
+
+    return;
+}
+
 int main() {
     set<pair<int, int>> combinations;
-    for (int i = 1; i < 5; i++) {
-        for (int j = i+1; j < 5; j++) {
+    for (int i = 0; i < 4; i++) {
+        for (int j = i+1; j < 4; j++) {
             combinations.insert({i, j});
         }
     }
 
-    int fav, gamesPlayed;
-    scanf("%d %d", &fav, &gamesPlayed);
+    int favorite, gamesPlayed;
+    scanf("%d %d", &favorite, &gamesPlayed);
+    favorite--;
 
-    int teamScores[4] = {0};
+    vector<int> teamScores;
+    for (int i = 0; i < 4; i++) {
+        teamScores.push_back(0);
+    }
+
     for (int i = 0; i < gamesPlayed; i++) {
         int a, b, aScore, bScore;
         scanf("%d %d %d %d", &a, &b, &aScore, &bScore);
+        a--; b--;
 
         if (aScore > bScore) {
-            teamScores[a-1] += 3;
+            teamScores[a] += 3;
         } else if (bScore > aScore) {
-            teamScores[b-1] += 3;
+            teamScores[b] += 3;
         } else {
-            teamScores[a-1] += 1;
-            teamScores[b-1] += 1;
+            teamScores[a] += 1;
+            teamScores[b] += 1;
         }
 
         if (a > b) {
@@ -36,7 +77,8 @@ int main() {
         }
     }
 
-    queue<pair<int, int>> futureGames;
+    calculateCombination(gamesPlayed, favorite, combinations, teamScores);
+    printf("%d", totalWins);
 
     return 0;
 }
