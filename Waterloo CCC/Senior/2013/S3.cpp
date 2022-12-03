@@ -5,8 +5,9 @@
 using namespace std;
 
 int totalWins = 0;
+int favorite;
 
-void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::iterator combinationsIt, vector<int> teamScores) {
+void calculateCombination(int gamesPlayed, set<pair<int, int>>::iterator combinationsIt, vector<int> teamScores) {
     if (gamesPlayed == 6) { // all games have been played
         for (int i = 0; i < 4; i++) {
             if (i == favorite) continue;
@@ -18,18 +19,19 @@ void calculateCombination(int gamesPlayed, int favorite, set<pair<int, int>>::it
 
     pair<int, int> game = *combinationsIt;
     combinationsIt++;
+    gamesPlayed++;
 
     teamScores[game.first]++;
     teamScores[game.second]++;
-    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
+    calculateCombination(gamesPlayed, combinationsIt, teamScores);
 
     teamScores[game.first] += 2;
     teamScores[game.second]--;
-    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
+    calculateCombination(gamesPlayed, combinationsIt, teamScores);
 
     teamScores[game.first] -= 3;
     teamScores[game.second] += 3;
-    calculateCombination(gamesPlayed + 1, favorite, combinationsIt, teamScores);
+    calculateCombination(gamesPlayed, combinationsIt, teamScores);
 
     return;
 }
@@ -42,7 +44,7 @@ int main() {
         }
     }
 
-    int favorite, gamesPlayed;
+    int gamesPlayed;
     scanf("%d %d", &favorite, &gamesPlayed);
     favorite--;
 
@@ -72,7 +74,7 @@ int main() {
         }
     }
 
-    calculateCombination(gamesPlayed, favorite, combinations.begin(), teamScores);
+    calculateCombination(gamesPlayed, combinations.begin(), teamScores);
     printf("%d", totalWins);
 
     return 0;
