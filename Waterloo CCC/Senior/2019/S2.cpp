@@ -11,8 +11,12 @@ bool isPrime(int n) {
     if (n == 2) {
         return true;
     }
+    if (notPrime.find(n) != notPrime.end()) {
+        return false;
+    }
     for (int i = 2; i*i <= n; i++) {
         if (n%i == 0) {
+            notPrime.insert(n);
             return false;
         }
     }
@@ -25,6 +29,12 @@ pair<int, int> pettyAveragePrimes(int target) {
     num1 = 0;
     num2 = target;
     while (num1 < num2) {
+        //skip if not prime
+        if (!isPrime(num1)) {
+            num1++;
+            num2--;
+            continue;
+        }
         if (isPrime(num1) && isPrime(num2)) {
             return make_pair(num1, num2);
         }
