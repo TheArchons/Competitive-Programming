@@ -3,7 +3,7 @@
 using namespace std;
 
 int main() {
-    freopen("3.input", "r", stdin); // for testing
+    //freopen("3.input", "r", stdin); // for testing
     
     int gates, planes;
     scanf("%d\n%d", &gates, &planes);
