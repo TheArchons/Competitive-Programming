@@ -1,3 +1,5 @@
+//https://codeforces.com/contest/279/problem/B
+
 #include <stdio.h>
 #include <bits/stdc++.h>
 

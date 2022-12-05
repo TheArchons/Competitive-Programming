@@ -1,3 +1,5 @@
+//http://www.usaco.org/index.php?page=viewproblem2&cpid=573
+
 #include <stdio.h>
 #include <set>
 #include <unordered_set>

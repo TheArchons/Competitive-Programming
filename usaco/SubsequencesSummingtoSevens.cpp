@@ -1,3 +1,5 @@
+// http://www.usaco.org/index.php?page=viewproblem2&cpid=595
+
 #include <stdio.h>
 using namespace std;
 

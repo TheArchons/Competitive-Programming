@@ -1,3 +1,5 @@
+https://cses.fi/problemset/task/1068
+
 #include <stdio.h>
 #include <stdint.h>
 using namespace std;

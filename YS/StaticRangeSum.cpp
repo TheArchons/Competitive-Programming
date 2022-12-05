@@ -1,3 +1,5 @@
+//https://judge.yosupo.jp/problem/static_range_sum
+
 #include <stdio.h>
 
 using namespace std;
