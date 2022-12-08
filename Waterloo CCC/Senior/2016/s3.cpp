@@ -4,10 +4,10 @@ using namespace std;
 
 /*
 1. Remove all useless nodes (restaurants that do not lead to a pho restaurant) by doing a DFS from the pho restaurants
-2. Pick one pho restaurant that only has one connection as the root (because all useless nodes are removed, it is guaranteed that there is at least one such node)
-3. Calculate the depth of each node from the root
+2. For each pho restaurant with at most one connection, find the depth if the restaurant was the root.
     1. Do a DFS from the root
     2. For each node in path, set the depth of the node for max(current depth of node, number of edges between the node and the first node of the path)
+3. Set the root to be the pho restaurant with the maximum depth
 4. DFS but choose the node with the lowest depth first.
 5. When all restaurants are visited, return the number of edges traveled
 */
@@ -55,24 +55,69 @@ int main() {
         }
     }
 
-    // Find the root
-    int root;
+    int maxDepth = 0;
+    int maxDepthNode = -1;
+
+    // Find the depth of each node if the node is the root
     for (auto it = phos.begin(); it != phos.end(); it++) {
-        if (connections[*it].size() == 1) {
-            root = *it;
-            break;
+        if (connections[*it].size() != 1) continue;
+        // Calculate the depth of each node
+        int depths[nodes] = {0};
+
+        path.push_back(*it);
+        tempVisited.clear();
+
+        int curr = *it;
+        int visitedPhoNum = 1;
+
+        while (visitedPhoNum < phos.size()) {
+            bool found = false;
+            tempVisited.insert(curr);
+
+            // calculate the depth of all nodes in the path
+            for (int i = path.size() - 2; i >= 0; i--) {
+                depths[path[i]] = max(depths[path[i]], (int)path.size() - i - 1);
+            }
+
+            for (int i = 0; i < connections[curr].size(); i++) {
+                if (tempVisited.find(connections[curr][i]) == tempVisited.end() && visited.find(connections[curr][i]) == visited.end()) {
+                    curr = connections[curr][i];
+                    path.push_back(curr);
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                path.pop_back();
+                curr = path.back();
+            }
+
+            if (phos.find(curr) != phos.end()) {
+                visitedPhoNum++;
+            }
+        }
+
+        if (depths[*it] > maxDepth) {
+            maxDepth = depths[*it];
+            maxDepthNode = *it;
         }
     }
 
-    // Calculate the depth of each node
+    // Recalculate the depth of each node
+
     int depths[nodes] = {0};
-
-    path.push_back(root);
-    tempVisited.clear();
-
+    int root = maxDepthNode;
     int curr = root;
+
+    path.clear();
+    path.push_back(root);
+
     int visitedPhoNum = 1;
 
+    tempVisited.clear();
+    tempVisited.insert(root);
+    
     while (visitedPhoNum < phos.size()) {
         bool found = false;
         tempVisited.insert(curr);
@@ -105,8 +150,8 @@ int main() {
     path.clear();
     path.push_back(root);
     curr = root;
-    visitedPhoNum = 1;
     int dist = 0;
+    visitedPhoNum = 1;
 
     while (visitedPhoNum < phos.size()) {
         visited.insert(curr);
