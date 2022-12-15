@@ -1,4 +1,3 @@
-
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -7,14 +6,13 @@ using namespace std;
 int twoSum(vector<int> nums, int target) {
     int count = 0;
 
-    multiset<int> numDiffs;
-
+    int diffs[4001] = {0};
     for (int i = 0; i < nums.size(); i++) {
-        if (numDiffs.find(nums[i]) != numDiffs.end()) {
+        if (diffs[nums[i]] > 0) {
             count++;
-            numDiffs.erase(numDiffs.find(nums[i]));
+            diffs[nums[i]]--;
         } else {
-            numDiffs.insert(target - nums[i]);
+            diffs[target - nums[i]]++;
         }
     }
 
