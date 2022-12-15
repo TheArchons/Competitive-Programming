@@ -12,8 +12,10 @@ int twoSum(vector<int> nums, int target) {
     for (int i = 0; i < nums.size(); i++) {
         if (numDiffs.find(nums[i]) != numDiffs.end()) {
             count++;
+            numDiffs.erase(numDiffs.find(nums[i]));
+        } else {
+            numDiffs.insert(target - nums[i]);
         }
-        numDiffs.insert(target - nums[i]);
     }
 
     return count;
