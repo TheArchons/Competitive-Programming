@@ -7,7 +7,7 @@ using namespace std;
 2. For each pho restaurant with at most one connection, find the depth if the restaurant was the root.
     1. Do a DFS from the root
     2. For each node in path, set the depth of the node for max(current depth of node, number of edges between the node and the first node of the path)
-3. Set the root to be the pho restaurant with the maximum depth
+3. Set the root to be the pho restaurant with the maximum depth's furthest node
 4. DFS but choose the node with the lowest depth first.
 5. When all restaurants are visited, return the number of edges traveled
 */
@@ -104,16 +104,58 @@ int main() {
         }
     }
 
+    // from the maxDepthNode, find the furthest node
+    int furthestNode = maxDepthNode;
+    int furthestDepth = 0;
+
+    int curr = maxDepthNode;
+    int currDepth = 0;
+
+    path.clear();
+    path.push_back(furthestNode);
+
+    int visitedPhoNum = 1;
+    tempVisited.clear();
+
+    while (visitedPhoNum < phos.size()) {
+        bool found = false;
+        tempVisited.insert(curr);
+
+        for (int i = 0; i < connections[curr].size(); i++) {
+            if (tempVisited.find(connections[curr][i]) == tempVisited.end() && visited.find(connections[curr][i]) == visited.end()) {
+                currDepth++;
+                if (currDepth > furthestDepth) {
+                    furthestDepth = currDepth;
+                    furthestNode = connections[curr][i];
+                }
+                curr = connections[curr][i];
+                path.push_back(curr);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            path.pop_back();
+            curr = path.back();
+            currDepth--;
+        }
+
+        if (phos.find(curr) != phos.end()) {
+            visitedPhoNum++;
+        }
+    }
+
     // Recalculate the depth of each node
 
     int depths[nodes] = {0};
     int root = maxDepthNode;
-    int curr = root;
+    curr = root;
 
     path.clear();
     path.push_back(root);
 
-    int visitedPhoNum = 1;
+    visitedPhoNum = 1;
 
     tempVisited.clear();
     tempVisited.insert(root);
