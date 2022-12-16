@@ -3,226 +3,153 @@
 using namespace std;
 
 /*
-1. Remove all useless nodes (restaurants that do not lead to a pho restaurant) by doing a DFS from the pho restaurants
-2. For each pho restaurant with at most one connection, find the depth if the restaurant was the root.
-    1. Do a DFS from the root
-    2. For each node in path, set the depth of the node for max(current depth of node, number of edges between the node and the first node of the path)
-3. Set the root to be the pho restaurant with the maximum depth's furthest node
-4. DFS but choose the node with the lowest depth first.
-5. When all restaurants are visited, return the number of edges traveled
+1. Remove all useless nodes
+2. Find the longest path
+3. Find the longest path from the longest path and set to root
+4. Find the distance to visit all pho restaurants from the root
+5. calculate the longest path from the root
+6. print 2 * (total distance) - (longest path from root)
 */
 
 int main() {
     //freopen("3.input", "r", stdin); // for testing
     
-    int nodes, phoNum;
-    scanf("%d %d\n", &nodes, &phoNum);
+    int restaurantNum, phoNum;
+    scanf("%d %d", &restaurantNum, &phoNum);
 
-    set<int> phos;
+    set<int> phoRestaurants;
+    
     for (int i = 0; i < phoNum; i++) {
-        int temp;
-        scanf("%d", &temp);
-        phos.insert(temp);
+        int phoRestaurant;
+        scanf("%d", &phoRestaurant);
+        phoRestaurants.insert(phoRestaurant);
     }
 
-    map<int, vector<int>> connections;
-    for (int i = 0; i < nodes-1; i++) {
+    vector<vector<int>> graph(restaurantNum);
+    
+    for (int i = 0; i < restaurantNum - 1; i++) {
         int a, b;
         scanf("%d %d", &a, &b);
-
-        connections[a].push_back(b);
-        connections[b].push_back(a);
+        graph[a].push_back(b);
+        graph[b].push_back(a);
     }
 
-    // Remove all useless nodes
-    set<int> visited, tempVisited;
-    vector<int> path;
-    path.push_back(*phos.begin());
-    
+    // Remove all useless nodes and calculate the longest path
+    vector<bool> visited(restaurantNum, false);
+    vector<bool> tempVisited(restaurantNum, false);
+    stack<int> path;
+    path.push(*phoRestaurants.begin());
+
+    int currDist, maxDist, maxDistNode;
+    currDist = maxDist = maxDistNode = 0;
+
     while (!path.empty()) {
-        int current = path.back();
-        path.pop_back();
-        tempVisited.insert(current);
+        int currNode = path.top();
+        tempVisited[currNode] = true;
 
-        if (phos.find(current) == phos.end() && connections[current].size() == 1) {
-            visited.insert(current);
-        }
-
-        for (int i = 0; i < connections[current].size(); i++) {
-            if (tempVisited.find(connections[current][i]) == tempVisited.end()) {
-                path.push_back(connections[current][i]);
-            }
-        }
-    }
-
-    int maxDepth = 0;
-    int maxDepthNode = -1;
-
-    // Find the depth of each node if the node is the root
-    for (auto it = phos.begin(); it != phos.end(); it++) {
-        if (connections[*it].size() != 1) continue;
-        // Calculate the depth of each node
-        int depths[nodes] = {0};
-
-        path.push_back(*it);
-        tempVisited.clear();
-
-        int curr = *it;
-        int visitedPhoNum = 1;
-
-        while (visitedPhoNum < phos.size()) {
-            bool found = false;
-            tempVisited.insert(curr);
-
-            // calculate the depth of all nodes in the path
-            for (int i = path.size() - 2; i >= 0; i--) {
-                depths[path[i]] = max(depths[path[i]], (int)path.size() - i - 1);
-            }
-
-            for (int i = 0; i < connections[curr].size(); i++) {
-                if (tempVisited.find(connections[curr][i]) == tempVisited.end() && visited.find(connections[curr][i]) == visited.end()) {
-                    curr = connections[curr][i];
-                    path.push_back(curr);
-                    found = true;
-                    break;
+        if (phoRestaurants.find(currNode) == phoRestaurants.end()) {
+            int connections = 0;
+            for (int i = 0; i < graph[currNode].size(); i++) {
+                int nextNode = graph[currNode][i];
+                if (!visited[nextNode]) {
+                    connections++;
                 }
             }
 
-            if (!found) {
-                path.pop_back();
-                curr = path.back();
-            }
-
-            if (phos.find(curr) != phos.end()) {
-                visitedPhoNum++;
+            if (connections <= 1) {
+                visited[currNode] = true;
             }
         }
 
-        if (depths[*it] > maxDepth) {
-            maxDepth = depths[*it];
-            maxDepthNode = *it;
-        }
-    }
-
-    // from the maxDepthNode, find the furthest node
-    int furthestNode = maxDepthNode;
-    int furthestDepth = 0;
-
-    int curr = maxDepthNode;
-    int currDepth = 0;
-
-    path.clear();
-    path.push_back(furthestNode);
-
-    int visitedPhoNum = 1;
-    tempVisited.clear();
-
-    while (visitedPhoNum < phos.size()) {
         bool found = false;
-        tempVisited.insert(curr);
 
-        for (int i = 0; i < connections[curr].size(); i++) {
-            if (tempVisited.find(connections[curr][i]) == tempVisited.end() && visited.find(connections[curr][i]) == visited.end()) {
-                currDepth++;
-                if (currDepth > furthestDepth) {
-                    furthestDepth = currDepth;
-                    furthestNode = connections[curr][i];
-                }
-                curr = connections[curr][i];
-                path.push_back(curr);
+        for (int i = 0; i < graph[currNode].size(); i++) {
+            int nextNode = graph[currNode][i];
+            if (!tempVisited[nextNode]) {
+                path.push(nextNode);
                 found = true;
                 break;
             }
         }
 
         if (!found) {
-            path.pop_back();
-            curr = path.back();
-            currDepth--;
-        }
-
-        if (phos.find(curr) != phos.end()) {
-            visitedPhoNum++;
-        }
-    }
-
-    // Recalculate the depth of each node
-
-    int depths[nodes] = {0};
-    int root = maxDepthNode;
-    curr = root;
-
-    path.clear();
-    path.push_back(root);
-
-    visitedPhoNum = 1;
-
-    tempVisited.clear();
-    tempVisited.insert(root);
-    
-    while (visitedPhoNum < phos.size()) {
-        bool found = false;
-        tempVisited.insert(curr);
-
-        // calculate the depth of all nodes in the path
-        for (int i = path.size() - 2; i >= 0; i--) {
-            depths[path[i]] = max(depths[path[i]], (int)path.size() - i - 1);
-        }
-
-        for (int i = 0; i < connections[curr].size(); i++) {
-            if (tempVisited.find(connections[curr][i]) == tempVisited.end() && visited.find(connections[curr][i]) == visited.end()) {
-                curr = connections[curr][i];
-                path.push_back(curr);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            path.pop_back();
-            curr = path.back();
-        }
-
-        if (phos.find(curr) != phos.end()) {
-            visitedPhoNum++;
-        }
-    }
-
-    // DFS but choose the node with the lowest depth first
-    path.clear();
-    path.push_back(root);
-    curr = root;
-    int dist = 0;
-    visitedPhoNum = 1;
-
-    while (visitedPhoNum < phos.size()) {
-        visited.insert(curr);
-
-        int minDepth = INT_MAX;
-        int minDepthNode = -1;
-
-        for (int i = 0; i < connections[curr].size(); i++) {
-            if (visited.find(connections[curr][i]) == visited.end()) {
-                if (depths[connections[curr][i]] < minDepth) {
-                    minDepth = depths[connections[curr][i]];
-                    minDepthNode = connections[curr][i];
-                }
-            }
-        }
-
-        if (minDepthNode != -1) {
-            curr = minDepthNode;
-            path.push_back(curr);
-            if (phos.find(curr) != phos.end()) visitedPhoNum++;
+            path.pop();
+            currDist--;
         } else {
-            path.pop_back();
-            curr = path.back();
+            currDist++;
+            if (currDist > maxDist && phoRestaurants.find(currNode) != phoRestaurants.end()) {
+                maxDist = currDist;
+                maxDistNode = path.top();
+            }
         }
-
-        dist++;
     }
 
-    printf("%d", dist);
+    // Find the longest path from the longest path and set to root
+    tempVisited = visited;
+    path.push(maxDistNode);
+    currDist = maxDistNode = maxDist = 0;
+
+    while (!path.empty()) {
+        int currNode = path.top();
+        tempVisited[currNode] = true;
+
+        bool found = false;
+
+        for (int i = 0; i < graph[currNode].size(); i++) {
+            int nextNode = graph[currNode][i];
+            if (!tempVisited[nextNode]) {
+                path.push(nextNode);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            path.pop();
+            currDist--;
+        } else {
+            currDist++;
+            if (currDist > maxDist && phoRestaurants.find(path.top()) != phoRestaurants.end()) {
+                maxDist = currDist;
+                maxDistNode = path.top();
+            }
+        }
+    }
+
+    // Find the distance to visit all pho restaurants from the root and calculate the longest path from the root
+    int totalDist;
+    totalDist = currDist = maxDist = 0;
+
+    path.push(maxDistNode);
+
+    while (!path.empty()) {
+        int currNode = path.top();
+        visited[currNode] = true;
+
+        bool found = false;
+        
+        for (int i = 0; i < graph[currNode].size(); i++) {
+            int nextNode = graph[currNode][i];
+            if (!visited[nextNode]) {
+                path.push(nextNode);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            path.pop();
+            currDist--;
+        } else {
+            currDist++;
+            totalDist++;
+            if (currDist > maxDist && phoRestaurants.find(path.top()) != phoRestaurants.end()) {
+                maxDist = currDist;
+            }
+        }
+    }
+
+    printf("%d", 2 * totalDist - maxDist);
 
     return 0;
 }
