@@ -17,12 +17,17 @@ int main() {
     int restaurantNum, phoNum;
     scanf("%d %d", &restaurantNum, &phoNum);
 
-    set<int> phoRestaurants;
+    vector<bool> phoRestaurants(restaurantNum, false);
+
+    int phoBegin;
     
     for (int i = 0; i < phoNum; i++) {
         int phoRestaurant;
         scanf("%d", &phoRestaurant);
-        phoRestaurants.insert(phoRestaurant);
+        if (i == 0) {
+            phoBegin = phoRestaurant;
+        }
+        phoRestaurants[phoRestaurant] = true;
     }
 
     vector<vector<int>> graph(restaurantNum);
@@ -38,21 +43,29 @@ int main() {
     vector<bool> visited(restaurantNum, false);
     vector<bool> tempVisited(restaurantNum, false);
     stack<int> path;
-    path.push(*phoRestaurants.begin());
+    path.push(phoBegin);
 
     int currDist, maxDist, maxDistNode;
     currDist = maxDist = maxDistNode = 0;
+
+    // start clock
+    auto start = chrono::high_resolution_clock::now();
 
     while (!path.empty()) {
         int currNode = path.top();
         tempVisited[currNode] = true;
 
-        if (phoRestaurants.find(currNode) == phoRestaurants.end()) {
+        bool found = false;
+
+        if (!phoRestaurants[currNode]) {
             int connections = 0;
             for (int i = 0; i < graph[currNode].size(); i++) {
                 int nextNode = graph[currNode][i];
                 if (!visited[nextNode]) {
                     connections++;
+                    if (connections > 1) {
+                        break;
+                    }
                 }
             }
 
@@ -61,10 +74,10 @@ int main() {
             }
         }
 
-        bool found = false;
+        int nextNode;
 
         for (int i = 0; i < graph[currNode].size(); i++) {
-            int nextNode = graph[currNode][i];
+            nextNode = graph[currNode][i];
             if (!tempVisited[nextNode]) {
                 path.push(nextNode);
                 found = true;
@@ -77,9 +90,9 @@ int main() {
             currDist--;
         } else {
             currDist++;
-            if (currDist > maxDist && phoRestaurants.find(currNode) != phoRestaurants.end()) {
+            if (currDist > maxDist && phoRestaurants[nextNode]) {
                 maxDist = currDist;
-                maxDistNode = path.top();
+                maxDistNode = nextNode;
             }
         }
     }
@@ -89,48 +102,18 @@ int main() {
     path.push(maxDistNode);
     currDist = maxDistNode = maxDist = 0;
 
+    int totalDist = 0;
+
     while (!path.empty()) {
         int currNode = path.top();
         tempVisited[currNode] = true;
 
         bool found = false;
+        int nextNode;
 
         for (int i = 0; i < graph[currNode].size(); i++) {
-            int nextNode = graph[currNode][i];
+            nextNode = graph[currNode][i];
             if (!tempVisited[nextNode]) {
-                path.push(nextNode);
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            path.pop();
-            currDist--;
-        } else {
-            currDist++;
-            if (currDist > maxDist && phoRestaurants.find(path.top()) != phoRestaurants.end()) {
-                maxDist = currDist;
-                maxDistNode = path.top();
-            }
-        }
-    }
-
-    // Find the distance to visit all pho restaurants from the root and calculate the longest path from the root
-    int totalDist;
-    totalDist = currDist = maxDist = 0;
-
-    path.push(maxDistNode);
-
-    while (!path.empty()) {
-        int currNode = path.top();
-        visited[currNode] = true;
-
-        bool found = false;
-        
-        for (int i = 0; i < graph[currNode].size(); i++) {
-            int nextNode = graph[currNode][i];
-            if (!visited[nextNode]) {
                 path.push(nextNode);
                 found = true;
                 break;
@@ -143,8 +126,9 @@ int main() {
         } else {
             currDist++;
             totalDist++;
-            if (currDist > maxDist && phoRestaurants.find(path.top()) != phoRestaurants.end()) {
+            if (currDist > maxDist && phoRestaurants[nextNode]) {
                 maxDist = currDist;
+                maxDistNode = nextNode;
             }
         }
     }
