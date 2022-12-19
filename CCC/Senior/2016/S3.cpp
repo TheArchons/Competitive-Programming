@@ -7,17 +7,16 @@ using namespace std;
 2. Find the longest path
 3. Find the longest path from the longest path and set to root
 4. Find the distance to visit all pho restaurants from the root
-5. calculate the longest path from the root
-6. print 2 * (total distance) - (longest path from root)
+5. print 2 * (total distance) - (longest path from root)
 */
 
 int main() {
-    //freopen("3.input", "r", stdin); // for testing
+    freopen("3.input", "r", stdin); // for testing
     
     int restaurantNum, phoNum;
     scanf("%d %d", &restaurantNum, &phoNum);
 
-    vector<bool> phoRestaurants(restaurantNum, false);
+    bool phoRestaurants[restaurantNum] = {false};
 
     int phoBegin;
     
@@ -40,16 +39,13 @@ int main() {
     }
 
     // Remove all useless nodes and calculate the longest path
-    vector<bool> visited(restaurantNum, false);
-    vector<bool> tempVisited(restaurantNum, false);
+    bool visited[restaurantNum] = {false};
+    bool tempVisited[restaurantNum] = {false};
     stack<int> path;
     path.push(phoBegin);
 
     int currDist, maxDist, maxDistNode;
     currDist = maxDist = maxDistNode = 0;
-
-    // start clock
-    auto start = chrono::high_resolution_clock::now();
 
     while (!path.empty()) {
         int currNode = path.top();
@@ -98,7 +94,6 @@ int main() {
     }
 
     // Find the longest path from the longest path and set to root
-    tempVisited = visited;
     path.push(maxDistNode);
     currDist = maxDistNode = maxDist = 0;
 
@@ -106,14 +101,14 @@ int main() {
 
     while (!path.empty()) {
         int currNode = path.top();
-        tempVisited[currNode] = true;
+        visited[currNode] = true;
 
         bool found = false;
         int nextNode;
 
         for (int i = 0; i < graph[currNode].size(); i++) {
             nextNode = graph[currNode][i];
-            if (!tempVisited[nextNode]) {
+            if (!visited[nextNode]) {
                 path.push(nextNode);
                 found = true;
                 break;
