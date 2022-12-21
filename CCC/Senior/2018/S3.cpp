@@ -81,45 +81,50 @@ int main() {
     }
 
     // BFS
-    queue<tuple<int, int, int>> q; // x, y, distance
+    queue<tuple<int, int, int>> q; // y, x, distance
     q.push({start.first, start.second, 0});
 
     while (!q.empty()) {
-        auto [x, y, distance] = q.front();
+        auto [y, x, distance] = q.front();
         q.pop();
 
-        char curr = grid[x][y];
-
-        if (curr == 'W') {
-            continue;
-        }
-
-        distances[x][y] = distance;
+        char curr = grid[y][x];
 
         if (curr == '.') distance++;
 
-        // travel through all four directions if the curr distance is less than the distance at the next position
+        // travel through all four directions if the curr distance is less than the distance at the neyt position
         
-        if (x - 1 >= 0 && (distances[x - 1][y] > distance || distances[x - 1][y] == -1) && (curr == '.' || curr == 'U')) {
-            q.push({x - 1, y, distance});
+        int newY = y - 1, newX = x;
+        if (grid[newY][newX] != 'W' && (distances[newY][newX] > distance || distances[newY][newX] == -1) && (curr == '.' || curr == 'U')) {
+            q.push({newY, newX, distance});
+            distances[newY][newX] = distance;
         }
 
-        if (x + 1 < height && (distances[x + 1][y] > distance || distances[x + 1][y] == -1) && (curr == '.' || curr == 'D')) {
-            q.push({x + 1, y, distance});
+        newY = y + 1, newX = x;
+
+        if (grid[newY][newX] != 'W' && (distances[newY][newX] > distance || distances[newY][newX] == -1) && (curr == '.' || curr == 'D')) {
+            q.push({newY, newX, distance});
+            distances[newY][newX] = distance;
         }
 
-        if (y - 1 >= 0 && (distances[x][y - 1] > distance || distances[x][y - 1] == -1) && (curr == '.' || curr == 'L')) {
-            q.push({x, y - 1, distance});
+        newY = y, newX = x - 1;
+
+        if (grid[newY][newX] != 'W' && (distances[newY][newX] > distance || distances[newY][newX] == -1) && (curr == '.' || curr == 'L')) {
+            q.push({newY, newX, distance});
+            distances[newY][newX] = distance;
         }
 
-        if (y + 1 < width && (distances[x][y + 1] > distance || distances[x][y + 1] == -1) && (curr == '.' || curr == 'R')) {
-            q.push({x, y + 1, distance});
+        newY = y, newX = x + 1;
+
+        if (grid[newY][newX] != 'W' && (distances[newY][newX] > distance || distances[newY][newX] == -1) && (curr == '.' || curr == 'R')) {
+            q.push({newY, newX, distance});
+            distances[newY][newX] = distance;
         }
     }
 
     // print distances
-    for (auto [x, y] : empties) {
-        cout << distances[x][y] << endl;
+    for (auto [y, x] : empties) {
+        cout << distances[y][x] << endl;
     }
 
     return 0;
