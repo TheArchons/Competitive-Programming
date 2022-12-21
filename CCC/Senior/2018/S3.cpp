@@ -111,7 +111,7 @@ int main() {
 
         if (curr == '.') distance++;
 
-        // travel through all four directions if the curr distance is less than the distance at the neyt position
+        // travel through all four directions if the curr distance is less than the distance at the next position
         
         int newY = y - 1, newX = x;
         if (grid[newY][newX] != 'W' && (distances[newY][newX] > distance || distances[newY][newX] == -1) && (curr == '.' || curr == 'U')) {
