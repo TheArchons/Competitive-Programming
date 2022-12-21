@@ -2,6 +2,16 @@
 
 using namespace std;
 
+void printGrid(vector<vector<char>> grid) { // DEBUG
+    for (auto row : grid) {
+        for (auto col : row) {
+            cout << col << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
 int main() {
     //freopen("3.input", "r", stdin); // for testing
     int height, width;
@@ -33,7 +43,7 @@ int main() {
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             if (grid[i][j] == 'C') {
-                grid[i][j] = 'W';
+                grid[i][j] = 'T';
 
                 // travel through all four directions
                 
@@ -42,8 +52,8 @@ int main() {
                     if (grid[k][j] == 'W') {
                         break;
                     }
-                    if (grid[k][j] == '.') {
-                        grid[k][j] = 'W';
+                    if (grid[k][j] == '.' || grid[k][j] == 'T') {
+                        grid[k][j] = 'T';
                     }
                 }
 
@@ -52,8 +62,8 @@ int main() {
                     if (grid[k][j] == 'W') {
                         break;
                     }
-                    if (grid[k][j] == '.') {
-                        grid[k][j] = 'W';
+                    if (grid[k][j] == '.' || grid[k][j] == 'T') {
+                        grid[k][j] = 'T';
                     }
                 }
 
@@ -62,8 +72,8 @@ int main() {
                     if (grid[i][k] == 'W') {
                         break;
                     }
-                    if (grid[i][k] == '.') {
-                        grid[i][k] = 'W';
+                    if (grid[i][k] == '.' || grid[i][k] == 'T') {
+                        grid[i][k] = 'T';
                     }
                 }
 
@@ -72,10 +82,19 @@ int main() {
                     if (grid[i][k] == 'W') {
                         break;
                     }
-                    if (grid[i][k] == '.') {
-                        grid[i][k] = 'W';
+                    if (grid[i][k] == '.' || grid[i][k] == 'T') {
+                        grid[i][k] = 'T';
                     }
                 }
+            }
+        }
+    }
+
+    // set all temps to walls
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            if (grid[i][j] == 'T') {
+                grid[i][j] = 'W';
             }
         }
     }
