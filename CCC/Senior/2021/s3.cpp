@@ -1,34 +1,45 @@
-#include <stdio.h>
-#include <climits>
-#include <stdlib.h>
-#include <algorithm>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-#define inf INT_MAX
+struct Friend {
+    int position;
+    int walkSpeed;
+    int hearingDistance;
+};
 
-bool compare(int a[], int b[]) {
-    return a[0] < b[0];
+bool operator<(const Friend& a, const Friend& b) {
+    return a.position < b.position;
 }
 
-// N - number of friends (0 for me)
-// P - Position
-// W - Walking speed (m/W)
-// D - Hearing distance
-
 int main() {
-    unsigned int n;
-    scanf("%d", &n);
-    int arr[n][3] = {{0}};
-    for (int i = 0; i < n; i++) {
-        scanf("%d %d %d", &arr[i][0], &arr[i][1], &arr[i][2]);
+    cin.sync_with_stdio(0); cin.tie(0);
+    freopen("3.input", "r", stdin); // for testing
+    
+    int numFriends;
+    cin >> numFriends;
+
+    set<Friend> friends;
+    for (int i = 0; i < numFriends; i++) {
+        int position, walkSpeed, hearingDistance;
+        cin >> position >> walkSpeed >> hearingDistance;
+        friends.insert({position, walkSpeed, hearingDistance});
     }
 
-    unsigned int min_dist = inf;
+    int minTime = INT_MAX;
+    for (int i = friends.begin()->position; i <= friends.rbegin()->position; i++) {
+        int currTime = 0;
+        for (auto it : friends) {
+            int dist = abs(it.position - i);
+            if (dist > it.hearingDistance) {
+                currTime += (dist - it.hearingDistance) * it.walkSpeed;
+            }
+        }
 
-    // sort by arr[i][0]
-    sort(arr, arr + n, compare);
+        minTime = min(minTime, currTime);
+    }
 
+    cout << minTime << endl;
 
-    printf("%d\n", min_dist);
+    return 0;
 }
