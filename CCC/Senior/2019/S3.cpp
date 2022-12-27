@@ -147,15 +147,36 @@ int main() {
     }
 
     if (numberCount == 2) {
+        // try rows
+        squareType tempSquare = square;
         for (int i = 0; i < 3; i++) {
             int rowNum = noNumber;
             for (int j = 0; j < 3; j++) {
-                if (square[i][j] != noNumber) {
-                    rowNum = square[i][j];
+                if (tempSquare[i][j] != noNumber) {
+                    rowNum = tempSquare[i][j];
                 }
             }
             for (int j = 0; j < 3; j++) {
-                square[i][j] = rowNum;
+                tempSquare[i][j] = rowNum;
+            }
+        }
+
+        tempSquare = calculateGuarantees(tempSquare);
+        if (squareCompleted(tempSquare)) {
+            printSquare(tempSquare);
+            return 0;
+        }
+
+        // try columns
+        for (int i = 0; i < 3; i++) {
+            int colNum = noNumber;
+            for (int j = 0; j < 3; j++) {
+                if (square[j][i] != noNumber) {
+                    colNum = square[j][i];
+                }
+            }
+            for (int j = 0; j < 3; j++) {
+                square[j][i] = colNum;
             }
         }
 
