@@ -30,6 +30,13 @@ void solve() {
 
         if (arrsMap.find(arr) != arrsMap.end() && arrsMap[arr] != res) {
             lie(true);
+            // take in the rest of the input
+            for (int j = i + 1; j < arrs; j++) {
+                string s;
+                cin >> s;
+                bool res;
+                cin >> res;
+            }
             return;
         } else {
             arrsMap[arr] = res;
@@ -42,38 +49,67 @@ void solve() {
         for (int i = 0; i < arrLen; i++) {
             // check if all 1s correspond to the same result for the current bit
             bool canSplit = true;
+            bool found = false;
             bool res;
             for (auto it : arrsMap) {
                 if (it.first[i]) {
                     res = it.second;
+                    found = true;
                     break;
                 }
             }
 
-            for (auto it : arrsMap) {
-                if (it.first[i] && it.second != res) {
-                    canSplit = false;
-                    break;
+            if (found) {
+                for (auto it : arrsMap) {
+                    if (it.first[i] && it.second != res) {
+                        canSplit = false;
+                        break;
+                    }
                 }
-            }
 
-            if (canSplit) {
-                // remove all lines with arr[i] == 1
-                for (auto it = arrsMap.begin(); it != arrsMap.end(); ) {
-                    if (it->first[i]) {
-                        it = arrsMap.erase(it);
-                    } else {
-                        it++;
+                if (canSplit) {
+                    split = true;
+                    // remove all lines with arr[i] == 1
+                    for (auto it = arrsMap.begin(); it != arrsMap.end(); ) {
+                        if (it->first[i]) {
+                            it = arrsMap.erase(it);
+                        } else {
+                            it++;
+                        }
                     }
                 }
             }
             
             // check if all 0s correspond to the same result for the current bit
             canSplit = true;
+            found = false;
+
             for (auto it : arrsMap) {
                 if (!it.first[i]) {
                     res = it.second;
+                    found = true;
                     break;
+                }
+            }
+
+            if (found) {
+                for (auto it : arrsMap) {
+                    if (!it.first[i] && it.second != res) {
+                        canSplit = false;
+                        break;
+                    }
+                }
+
+                if (canSplit) {
+                    split = true;
+                    // remove all lines with arr[i] == 0
+                    for (auto it = arrsMap.begin(); it != arrsMap.end(); ) {
+                        if (!it->first[i]) {
+                            it = arrsMap.erase(it);
+                        } else {
+                            it++;
+                        }
+                    }
                 }
             }
         }
@@ -99,7 +135,7 @@ void solve() {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("3.input", "r", stdin); // for testing
+    freopen("3.input", "r", stdin); // for testing
     
     int testCases;
     cin >> testCases;
