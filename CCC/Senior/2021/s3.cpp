@@ -13,7 +13,7 @@ int main() {
     int friendNum;
     cin >> friendNum;
 
-    vector<int> diffs(1000000);
+    vector<int> diffs(2000001);
     int minFriend, maxFriend;
     minFriend = INT_MAX;
     maxFriend = 0;
@@ -34,8 +34,8 @@ int main() {
         maxFriend = max(maxFriend, p);
     }
 
-    int walkDist = 0;
-    int currDiff = 0;
+    long long int walkDist = 0;
+    long long int currDiff = 0;
 
     for (auto [p, w, d] : friends) {
         currDiff -= w;
@@ -46,7 +46,7 @@ int main() {
 
     currDiff += diffs[minFriend];
 
-    int minWalkDist = walkDist;
+    long long int minWalkDist = walkDist;
 
     for (int i = minFriend+1; i <= maxFriend; i++) {
         walkDist += currDiff;
