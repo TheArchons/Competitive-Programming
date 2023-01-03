@@ -1,21 +1,23 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 int main() {
     int columns, rows, inputs, total = 0, Rs = 0, Cs = 0, temp2 = 0;
-    std::string temp;
-    std::getline(std::cin, temp);
-    rows = std::stoi(temp);
-    std::getline(std::cin, temp);
-    columns = std::stoi(temp);
-    std::getline(std::cin, temp);
-    inputs = std::stoi(temp);
+    string temp;
+    getline(cin, temp);
+    rows = stoi(temp);
+    getline(cin, temp);
+    columns = stoi(temp);
+    getline(cin, temp);
+    inputs = stoi(temp);
     bool rArray[rows] = {0}, cArray[columns] = {0};
     for (int i = 0; i < inputs; i++) {
-        std::string input;
-        std::getline(std::cin, input);
+        string input;
+        getline(cin, input);
         char cOrR = input[0];
-        int index = std::stoi(input.substr(2, input.length()));
+        int index = stoi(input.substr(2, input.length()));
         if (cOrR == 'R') {
             if (rArray[index - 1]) {
                 rArray[index - 1] = false;
@@ -44,5 +46,5 @@ int main() {
     }
     total = Cs*(rows-Rs);
     total += Rs*(columns-Cs);
-    std::cout << total;
+    cout << total;
 }
