@@ -4,16 +4,16 @@ using namespace std;
 
 struct Friend {
     int position, walkSpeed, hearDist;
-}p;
+};
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("3.input", "r", stdin); // for testing
+    freopen("3.input", "r", stdin); // for testing
     
     int friendNum;
     cin >> friendNum;
 
-    vector<int> diffs(1000000);
+    vector<int> diffs(2000000);
     int minFriend, maxFriend;
     minFriend = INT_MAX;
     maxFriend = 0;
