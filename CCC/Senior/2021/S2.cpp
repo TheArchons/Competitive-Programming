@@ -1,26 +1,50 @@
 #include <iostream>
+#include <string>
+
 using namespace std;
 
-int isPrime(int n) {
-    if (n <= 1) return false;
-    for (int i = 2; i * i <= n; i++) {
-        if (n % i == 0) return false;
-    }
-    return true;
-}
-
 int main() {
-    int inputs;
-    cin >> inputs;
+    int columns, rows, inputs, total = 0, Rs = 0, Cs = 0, temp2 = 0;
+    string temp;
+    getline(cin, temp);
+    rows = stoi(temp);
+    getline(cin, temp);
+    columns = stoi(temp);
+    getline(cin, temp);
+    inputs = stoi(temp);
+    bool rArray[rows] = {0}, cArray[columns] = {0};
     for (int i = 0; i < inputs; i++) {
-        int input, output, out2 = 1;
-        cin >> input;
-        output = input*2;
-        output = output-1;
-        while (!isPrime(output) || !isPrime(out2)) {
-            output--;
-            out2++;
+        string input;
+        getline(cin, input);
+        char cOrR = input[0];
+        int index = stoi(input.substr(2, input.length()));
+        if (cOrR == 'R') {
+            if (rArray[index - 1]) {
+                rArray[index - 1] = false;
+            }
+            else {
+                rArray[index - 1] = true;
+            }
+        } else {
+            if (cArray[index - 1]) {
+                cArray[index - 1] = false;
+            }
+            else {
+                cArray[index - 1] = true;
+            }
         }
-        cout << out2 << " " << output << endl;
     }
+    for (int i = 0; i < rows; i++) {
+        if (rArray[i]) {
+            Rs++;
+        }
+    }
+    for (int i = 0; i < columns; i++) {
+        if (cArray[i]) {
+            Cs++;
+        }
+    }
+    total = Cs*(rows-Rs);
+    total += Rs*(columns-Cs);
+    cout << total;
 }
