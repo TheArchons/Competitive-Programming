@@ -2,19 +2,46 @@
 
 using namespace std;
 
-void solve(vector<vector<int>> walkways, vector<int> stations) {
-    printf("1");
+vector<vector<int>> walkways;
+int stationOne;
+
+void solve(vector<int> stations) {
+    // BFS
+    queue<pair<int, int>> q;
+    q.push(make_pair(stations[0], 0));
+
+    while (true) {
+        pair<int, int> current = q.front();
+       q.pop();
+
+        // check if current station is the end station
+        if (current.first == stations.size()) {
+            cout << current.second << endl;
+            return;
+        }
+
+        // add train to queue
+        if (stations[current.second] == current.first) {
+            q.push(make_pair(stations[current.second + 1], current.second + 1));
+        }
+
+        // add walkways
+        for (int j = 0; j < walkways[current.first].size(); j++) {
+            q.push(make_pair(walkways[current.first][j], current.second + 1));
+        }
+
+    }
     return;
 }
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("4.input", "r", stdin); // for testing
+    //freopen("4.input", "r", stdin); // for testing
     
     int subwayStationNum, walkwayNum, dayNum;
     cin >> subwayStationNum >> walkwayNum >> dayNum;
 
-    vector<vector<int>> walkways(subwayStationNum + 1);
+    walkways.resize(subwayStationNum + 1);
 
     for (int i = 0; i < walkwayNum; i++) {
         int a, b;
@@ -27,17 +54,22 @@ int main() {
         int a;
         cin >> a;
         stations[i] = a;
+        if (a == 1) stationOne = i;
     }
 
     for (int i = 0; i < dayNum; i++) {
         int a, b;
         cin >> a >> b;
         // swap stations
-        int temp = stations[a - 1];
-        stations[a - 1] = stations[b - 1];
-        stations[b - 1] = temp;
+        a--; b--;
+        if (stations[a] == 1) stationOne = b;
+        int temp = stations[a];
+        stations[a] = stations[b];
+        stations[b] = temp;
 
-        solve(walkways, stations);
+        // TODO change starting station to station 1
+
+        solve(stations);
     }
 
     return 0;
