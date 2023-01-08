@@ -10,9 +10,13 @@ void solve(vector<int> stations) {
     queue<pair<int, int>> q;
     q.push(make_pair(stations[0], 0));
 
+    set<int> visited;
+
     while (true) {
         pair<int, int> current = q.front();
-       q.pop();
+        q.pop();
+
+        visited.insert(current.first);
 
         // check if current station is the end station
         if (current.first == stations.size()) {
@@ -27,10 +31,15 @@ void solve(vector<int> stations) {
 
         // add walkways
         for (int j = 0; j < walkways[current.first].size(); j++) {
-            q.push(make_pair(walkways[current.first][j], current.second + 1));
+            if (visited.find(walkways[current.first][j]) == visited.end()) {
+                q.push(make_pair(walkways[current.first][j], current.second + 1));
+            }
         }
 
     }
+
+    //! SHOULD NEVER HAPPEN
+    cout << stations.size() << endl;
     return;
 }
 
@@ -66,8 +75,6 @@ int main() {
         int temp = stations[a];
         stations[a] = stations[b];
         stations[b] = temp;
-
-        // TODO change starting station to station 1
 
         solve(stations);
     }
