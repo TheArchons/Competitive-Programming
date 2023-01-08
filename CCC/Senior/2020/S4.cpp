@@ -2,14 +2,6 @@
 
 using namespace std;
 
-/*
-    Shift the start of the array through the array.
-    For each start, find the minimum number of swaps to get the array in order.
-    First save the number of out of place As, and Bs.
-    The minimum number of swaps is abs(A - B).
-    return the minimum number of swaps.
-*/
-
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
     //freopen("4.input", "r", stdin); // for testing
@@ -19,23 +11,29 @@ int main() {
 
     int stringLen = s.length();
     int minSwaps = INT_MAX;
-    int As, Bs;
+    int As;
     As = 0;
 
-    for (auto c : s) {
-        if (c == 'A') As++;
+    vector<int> prefix(stringLen + 1);
+    prefix[0] = 0;
+    int currA = 0;
+
+    for (int i = 0; i < stringLen; i++) {
+        if (s[i] == 'A') {
+            As++; currA++;
+        }
+
+        prefix[i + 1] = currA;
     }
 
     for (int i = 0; i < stringLen; i++) {
         int a, b;
-        a = b = 0;
-        for (int j = 0; j < stringLen; j++) {\
-            int currPos = (i + j) % stringLen;
-            char curr = s[currPos];
-
-            // if out of place
-            if (curr == 'A' && j > As) a++;
-            else if (curr == 'B' && j < As) b++;
+        if (i + As > stringLen) {
+            a = (prefix[i] - prefix[(As + i) - stringLen]);
+            b = As - ((prefix[stringLen] - prefix[i]) + (prefix[(i + As) - stringLen]));
+        } else {
+            a = (prefix[stringLen] - prefix[i + As]) + prefix[i];
+            b = As - ((prefix[i + As] - prefix[i]));
         }
 
         minSwaps = min(minSwaps, abs(a - b) + min(a, b));
