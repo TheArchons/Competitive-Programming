@@ -6,40 +6,36 @@ vector<vector<int>> walkways;
 int stationOne;
 
 void solve(vector<int> stations) {
-    // BFS
-    queue<pair<int, int>> q;
-    q.push(make_pair(stations[0], 0));
+    // dijkstra
+    vector<int> dist(stations.size() + 1);
 
-    set<int> visited;
+    queue<int> q;
 
-    while (true) {
-        pair<int, int> current = q.front();
-        q.pop();
-
-        visited.insert(current.first);
-
-        // check if current station is the end station
-        if (current.first == stations.size()) {
-            cout << current.second << endl;
-            return;
-        }
-
-        // add train to queue
-        if (stations[current.second] == current.first) {
-            q.push(make_pair(stations[current.second + 1], current.second + 1));
-        }
-
-        // add walkways
-        for (int j = 0; j < walkways[current.first].size(); j++) {
-            if (visited.find(walkways[current.first][j]) == visited.end()) {
-                q.push(make_pair(walkways[current.first][j], current.second + 1));
-            }
-        }
-
+    // set the distances to the time it takes the train to get to the station and add each station to the queue
+    for (int i = 0; i < stations.size(); i++) {
+        dist[stations[i]] = i;
+        q.push(stations[i]);
     }
 
-    //! SHOULD NEVER HAPPEN
-    cout << stations.size() << endl;
+    while (!q.empty()) {
+        int current = q.front();
+        int currentDist = dist[current];
+        q.pop();
+
+        // add walkways
+        for (int i = 0; i < walkways[current].size(); i++) {
+            int next = walkways[current][i];
+            int nextDist = dist[next];
+            if (nextDist > currentDist + 1) {
+                dist[next] = currentDist + 1;
+                q.push(next);
+            }
+        }
+    }
+
+    int endDist = dist[stations.size()];
+    cout << endDist << endl;
+
     return;
 }
 
