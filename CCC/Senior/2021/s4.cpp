@@ -3,7 +3,6 @@
 using namespace std;
 
 vector<vector<int>> walkways;
-int stationOne;
 
 void solve(vector<int> stations) {
     // dijkstra
@@ -59,7 +58,6 @@ int main() {
         int a;
         cin >> a;
         stations[i] = a;
-        if (a == 1) stationOne = i;
     }
 
     for (int i = 0; i < dayNum; i++) {
@@ -67,7 +65,6 @@ int main() {
         cin >> a >> b;
         // swap stations
         a--; b--;
-        if (stations[a] == 1) stationOne = b;
         int temp = stations[a];
         stations[a] = stations[b];
         stations[b] = temp;
