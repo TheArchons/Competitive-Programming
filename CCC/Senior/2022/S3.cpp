@@ -4,58 +4,55 @@ using namespace std;
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("3.input", "r", stdin); // for testing
+    //freopen("3.input", "r", stdin); // for testing
     
     int notes, maxPitch, sampleNum;
     cin >> notes >> maxPitch >> sampleNum;
 
-    vector<int> result(notes, 1);
-
-    int currSamples = sampleNum - notes;
-    if (currSamples < 0) {
-        cout << "-1" << endl;
-        return 0;
-    }
-    if (!currSamples) {
-        for (int i = 0; i < notes; i++) {
-            cout << result[i] << " ";
-        }
-        cout << endl;
-        return 0;
-    }
-
-    int last = 0;
-
-    for (int i = 1; i < notes && currSamples > 0; i += 2) {
-        result[i] = 2;
-        currSamples -= 2;
-        if (i == notes - 1) {
-            currSamples++;
-        }
-        last = i;
-    }
-
-    // end behaviour
-    if (currSamples < -1 || currSamples > 0) {
+    if (notes > sampleNum) {
         cout << "-1" << endl;
         return 0;
     }
 
-    if (currSamples != 0) {
-        // currSamples < 0
-        // if even, impossible
-        if (notes % 2 == 0) {
-            cout << "-1" << endl;
-            return 0;
+    vector<int> pitches(notes, 1);
+    int currSamples = notes;
+    int regularMax = maxPitch - 1;
+
+    for (int i = 1; i < notes; i++) {
+        int pitch;
+        int wantedSamples = sampleNum - currSamples;
+        int prevPitch = pitches[i-1];
+        if (i < maxPitch) {
+            if (wantedSamples >= i) {
+                pitch = i + 1;
+                currSamples += pitch - 1;
+            } else {
+                pitch = i - wantedSamples;
+                currSamples += wantedSamples;
+            }
+        } else {
+            pitch = prevPitch >= maxPitch ? 1 : prevPitch + 1;
+            if (wantedSamples < regularMax) {
+                pitch += wantedSamples;
+                currSamples += wantedSamples;
+            } else {
+                currSamples += regularMax;
+            }
         }
-        // move the last sample to the end
-        result[notes - 1] = 2;
-        result[last] = 1;
+
+        pitches[i] = pitch;
+    }
+
+    if (sampleNum != currSamples) {
+        cout << "-1" << endl;
+        return 0;
     }
 
     for (int i = 0; i < notes; i++) {
-        cout << result[i] << " ";
+        cout << pitches[i] << " ";
     }
+
     cout << endl;
+
     return 0;
 }
