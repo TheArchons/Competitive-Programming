@@ -17,10 +17,13 @@ int main() {
     vector<int> pitches(notes, 1);
     int currSamples = notes;
     int regularMax = maxPitch - 1;
+    int lastPitchLocation = 1;
 
     for (int i = 1; i < notes; i++) {
         int pitch;
         int wantedSamples = sampleNum - currSamples;
+        if (!wantedSamples) break;
+        lastPitchLocation = i;
         int prevPitch = pitches[i-1];
         if (i < maxPitch) {
             if (wantedSamples >= i) {
@@ -41,6 +44,11 @@ int main() {
         }
 
         pitches[i] = pitch;
+    }
+
+    // set everything past lastPitchLocation to the last pitch
+    for (int i = lastPitchLocation + 1; i < notes; i++) {
+        pitches[i] = pitches[lastPitchLocation];
     }
 
     if (sampleNum != currSamples) {
