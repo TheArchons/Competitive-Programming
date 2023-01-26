@@ -6,3 +6,7 @@ test_data
 
 # Manual input
 *.input
+
+# USACO I/O
+*.in
+*.out
