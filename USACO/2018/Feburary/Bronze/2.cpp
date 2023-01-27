@@ -23,41 +23,34 @@ int main() {
 
     sort(cows.begin(), cows.end());
 
-    int left, right;
-    left = 1;
-    right = cowNum - 1;
+    int ans = 0;
+    bool wentLeft = false;
 
-    int ans = 1;
-    // go from front to back
-    while (left < right && cows[left + 1] - cows[left] <= cows[left] - cows[left - 1]) {
-        left++;
-    }
+    for (int i = 1; i < cowNum; i++) {
+        // if going left is more preferred, skip
+        if (cows[i] - cows[i - 1] <= cows[i + 1] - cows[i]) {
+            wentLeft = true;
+            if (i == cowNum - 2)
+                ans++;
+                break;
+            continue;
+        } else {
+            ans++;
+            int pos = i;
 
-    if (left >= right) {
-        cout << ans << endl;
-        return 0;
-    }
+            if (wentLeft) {
+                // account for going left
+                ans++;
+                wentLeft = false;
+            }
 
-    // if the only way to reach the end is to start from there, start from there
-    if (cows[cowNum - 2] - cows[cowNum - 3] <= cows[right] - cows[cowNum - 2]) {
-        ans = 2;
-        right--;
-        while (left < right && cows[right] - cows[right - 1] < cows[right + 1] - cows[right]) {
-            right--;
-        }
+            while (cows[pos + 1] - cows[pos] <= cows[pos + 2] - cows[pos + 1]) {
+                pos++;
+                if (pos == cowNum - 1)
+                    break;
+            }
 
-        if (left >= right) {
-            cout << ans << endl;
-            return 0;
-        }
-    }
-
-    // travel front to back until left >= right
-    while (left < right) {
-        ans++;
-        left++;
-        while (left < right && cows[left + 1] - cows[left] <= cows[left] - cows[left - 1]) {
-            left++;
+            i = pos - 1;
         }
     }
 
