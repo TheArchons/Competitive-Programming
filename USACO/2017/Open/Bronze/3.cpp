@@ -29,15 +29,25 @@ int main() {
     for (int i = 0; i < gridSideLength; i++) {
         for (int j = 0; j < gridSideLength; j++) {
             if (grid[i][j] && seenColors.find(grid[i][j]) == seenColors.end()) {
-                int maxRight, maxBottom;
+                int maxRight, maxBottom, maxTop, maxLeft;
                 maxRight = j;
                 maxBottom = i;
+                maxTop = i;
+                maxLeft = j;
                 int currColor = grid[i][j];
+
+                for (int k = i; k < gridSideLength; k++) {
+                    for (int l = 0; l < gridSideLength; l++) {
+                        if (grid[k][l] == currColor) {
+                            maxLeft = min(maxLeft, l);
+                        }
+                    }
+                }
 
                 seenColors.insert(currColor);
 
                 for (int k = i; k < gridSideLength; k++) {
-                    for (int l = j; l < gridSideLength; l++) {
+                    for (int l = maxLeft; l < gridSideLength; l++) {
                         if (grid[k][l] == currColor) {
                             maxRight = max(maxRight, l);
                             maxBottom = max(maxBottom, k);
@@ -46,7 +56,7 @@ int main() {
                 }
 
                 for (int k = i; k < maxBottom + 1; k++) {
-                    for (int l = j; l < maxRight + 1; l++) {
+                    for (int l = maxLeft; l < maxRight + 1; l++) {
                         if (grid[k][l] != currColor) {
                             potentialColors.erase(grid[k][l]);
                         }
