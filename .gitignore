@@ -1,5 +1,8 @@
 # Compiled c++
+# GCC
 *.exe
+# MSVC
+*.pdb
 
 # test data
 test_data
