@@ -14,12 +14,10 @@ bool operator<(const Friend& a, const Friend& b) {
 
 lld max(lld a, lld b) {
     return a > b ? a : b;
-}
 };
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("3.input", "r", stdin); // for testing
     freopen("3.input", "r", stdin); // for testing
     
     int friendNum;
