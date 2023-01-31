@@ -2,43 +2,53 @@
 
 using namespace std;
 
-int maxValue = 0;
-int maxWeight;
-set<vector<pair<int, int>>> seen;
-
-void recurse(vector<pair<int, int>> items, int currWeight, int currValue) {
-    if (currWeight > maxWeight || seen.find(items) != seen.end()) {
-        return;
-    }
-
-    seen.insert(items);
-
-    maxValue = max(maxValue, currValue);
-
-    for (int i = 0; i < items.size(); i++) {
-        pair<int, int> item = items[i];
-        items.erase(items.begin() + i);
-        recurse(items, currWeight + item.first, currValue + item.second);
-        items.insert(items.begin() + i, item);
-    }
-}
+struct itemStruct {
+    int weight;
+    int value;
+};
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
     //freopen("e.input", "r", stdin); // for testing
 
-    int itemNum;
+    int itemNum, maxWeight;
     cin >> itemNum >> maxWeight;
 
-    vector<pair<int, int>> items(itemNum);
-
+    // first = weight, second = value
+    vector<itemStruct> items(itemNum);
     for (int i = 0; i < itemNum; i++) {
-        cin >> items[i].first >> items[i].second;
+        cin >> items[i].weight >> items[i].value;
     }
 
-    recurse(items, 0, 0);
+    vector<vector<int>> dp(itemNum + 1, vector<int>(pow(10, 5) + 1, -1));
 
-    cout << maxValue << endl;
+    for (int i = 0; i < itemNum; i++) {
+        itemStruct currItem = items[i];
+        for (int j = 0; j <= pow(10, 5); j++) {
+            if (j - currItem.value < 0) {
+                dp[i + 1][j] = dp[i][j];
+            } else if (dp[i][j - currItem.value] != -1) {
+                if (!dp[i][j] || dp[i][j] == -1) {
+                    dp[i + 1][j] = dp[i][j - currItem.value] + currItem.weight;
+                } else {
+                    dp[i + 1][j] = min(dp[i][j - currItem.value] + currItem.weight, dp[i][j]);
+                }
+            } else if (j == currItem.value) {
+                dp[i + 1][j] = currItem.weight;
+            } else {
+                dp[i + 1][j] = dp[i][j];
+            }
+        }
+    }
+
+    int maxVal = 0;
+    for (int i = 0; i <= pow(10, 5); i++) {
+        if (dp[itemNum][i] != -1 && dp[itemNum][i] <= maxWeight) {
+            maxVal = max(maxVal, i);
+        }
+    }
+
+    cout << maxVal << endl;
 
     return 0;
 }
