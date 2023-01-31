@@ -7,6 +7,8 @@ struct itemStruct {
     int value;
 };
 
+#define ll long long
+
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
     //freopen("e.input", "r", stdin); // for testing
@@ -20,7 +22,7 @@ int main() {
         cin >> items[i].weight >> items[i].value;
     }
 
-    vector<vector<int>> dp(itemNum + 1, vector<int>(pow(10, 5) + 1, -1));
+    vector<vector<ll>> dp(itemNum + 1, vector<ll>(pow(10, 5) + 1, -1));
 
     for (int i = 0; i < itemNum; i++) {
         itemStruct currItem = items[i];
