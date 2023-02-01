@@ -4,7 +4,7 @@ using namespace std;
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("1.input", "r", stdin); // for testing
+    //freopen("1.input", "r", stdin); // for testing
 
     int cases;
     cin >> cases;
