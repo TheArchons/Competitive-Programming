@@ -2,19 +2,11 @@
 
 using namespace std;
 
-// subtask 1, brute force
+// subtask 1 + 2
 
 int halfCircumference, circumference;
 
-bool checkValid(multiset<int> points) {
-    auto it = points.begin();
-    int first, second, third;
-    first = *it;
-    it++;
-    second = *it;
-    it++;
-    third = *it;
-
+bool checkValid(int first, int second, int third) {
     if (second - first < halfCircumference && third - second < halfCircumference && (first + circumference) - third < halfCircumference) {
         return true;
     }
@@ -31,26 +23,46 @@ int main() {
 
     halfCircumference = (circumference + 1) / 2;
 
-    multiset<int> points;
+    vector<int> pointCount(circumference, 0);
     for (int i = 0; i < pointNum; i++) {
         int point;
         cin >> point;
-        points.insert(point);
+        pointCount[point]++;
     }
 
-    int pointCount = 0;
+    vector<int> pointCountPrefix(circumference, 0);
+    int prefixSum = 0;
+    for (int i = 0; i < circumference; i++) {
+        prefixSum += pointCount[i];
+        pointCountPrefix[i] = prefixSum;
+    }
 
-    for (auto it = points.begin(); it != points.end(); it++) {
-        for (auto it2 = it; it2 != points.end(); it2++) {
-            for (auto it3 = it2; it3 != points.end(); it3++) {
-                if (checkValid({*it, *it2, *it3})) {
-                    pointCount++;
-                }
+    int totalPoints = 0;
+
+    for (int i = 0; i < halfCircumference; i++) {
+        if (!pointCount[i]) continue;
+        for (int j = i + 1; j < i + halfCircumference; j++) {
+            if (!pointCount[j]) continue;
+            // int tail = pointCountPrefix[(i + halfCircumference) % circumference];
+            // int head = pointCountPrefix[(j + halfCircumference - 1) % circumference];
+            int head, tail;
+            if (i + halfCircumference < circumference) {
+                tail = pointCountPrefix[i + halfCircumference];
+            } else {
+                tail = pointCountPrefix[circumference - 1];
             }
+
+            if (j + halfCircumference - 1 < circumference) {
+                head = pointCountPrefix[j + halfCircumference - 1];
+            } else {
+                head = pointCountPrefix[circumference - 1];
+            }
+
+            totalPoints += abs(head - tail) * pointCount[i] * pointCount[j];
         }
     }
 
-    cout << pointCount << endl;
+    cout << totalPoints << endl;
 
     return 0;
 }
