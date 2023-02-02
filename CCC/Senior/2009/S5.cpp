@@ -2,75 +2,53 @@
 
 using namespace std;
 
-vector<vector<int>> area(30001, vector<int>(1001, 0));
-
-void updateDiff(int x, int y, int bitrate) {
-    if (x <= 0) x = 1;
-
-    // check for out of bounds
-    if (x > 30000 || y > 1000 || y <= 0) return;
-
-    area[x][y] += bitrate;
-
-    return;
+int calcEdge(int radius, int y) {
+    return floor(sqrt(pow(radius, 2) - pow(y, 2)));
 }
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("5.input", "r", stdin); // for testing
-    
-    int maxX, maxY;
-    cin >> maxX >> maxY;
+    //freopen("5.input", "r", stdin); // for testing. Comment out for submissions
 
-    int wirelessNum;
-    cin >> wirelessNum;
+    int yCount; cin >> yCount;
+    int xCount; cin >> xCount;
+    int wirelessCount; cin >> wirelessCount;
 
-    for (int i = 0; i < wirelessNum; i++) {
-        int x, y, radius, bitrate;
-        cin >> x >> y >> radius >> bitrate;
+    vector<vector<int>> grid(xCount, vector<int>(yCount, 0));
 
-        // do left side top
-        for (int posY = y + radius, posX = x; posY >= y; posY--, posX--) {
-            updateDiff(posX, posY, bitrate);
-        }
+    for (int i = 0; i < wirelessCount; i++) {
+        int x; cin >> x; int y; cin >> y; x--; y--;
+        int radius; cin >> radius; int power; cin >> power;
 
+        for (int j = y + radius; j >= y - radius; j--) {
+            if (j < 0 || j >= yCount) continue;
 
-        // do left side bottom
-        for (int posY = y - 1, posX = x - radius + 1; posY >= y - radius; posY--, posX++) {
-            updateDiff(posX, posY, bitrate);
-        }
+            int edge = calcEdge(radius, j - y);
 
+            int left = max(x - edge, 0);
+            int right = x + edge + 1;
+            if (right <= xCount - 1) grid[right][j] -= power;
 
-        // do right side top
-        for (int posY = y + radius, posX = x + 1; posY >= y; posY--, posX++) {
-            updateDiff(posX, posY, bitrate * -1);
-        }
-
-
-        // do right side bottom
-        for (int posY = y - 1, posX = x + radius; posY >= y - radius; posY--, posX--) {
-            updateDiff(posX, posY, bitrate * -1);
+            grid[left][j] += power;
         }
     }
 
-    // find max
-    int maxBitrate, maxCount, currBitrate;
-    maxBitrate = maxCount = currBitrate = 0;
+    int maxPower = 0; int maxPowerCount = 0;
 
-    for (int i = 1; i <= maxX; i++) {
-        currBitrate = 0;
-        for (int j = 1; j <= maxY; j++) {
-            currBitrate += area[j][i];
-            if (currBitrate > maxBitrate) {
-                maxBitrate = currBitrate;
-                maxCount = 1;
-            } else if (currBitrate == maxBitrate) {
-                maxCount++;
+    for (int i = 0; i < yCount; i++) {
+        int curr = 0;
+        for (int j = 0; j < xCount; j++) {
+            curr += grid[j][i];
+            if (curr > maxPower) {
+                maxPower = curr;
+                maxPowerCount = 1;
+            } else if (curr == maxPower) {
+                maxPowerCount++;
             }
         }
     }
-    
-    cout << maxBitrate << endl << maxCount << endl;
+
+    cout << maxPower << endl << maxPowerCount << endl;
 
     return 0;
 }

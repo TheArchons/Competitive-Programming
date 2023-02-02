@@ -11,7 +11,7 @@ struct itemStruct {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("e.input", "r", stdin); // for testing
+    freopen("e.input", "r", stdin); // for testing
 
     int itemNum, maxWeight;
     cin >> itemNum >> maxWeight;
