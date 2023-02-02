@@ -26,7 +26,7 @@ void solve() {
 
         if (x < 0 || x >= rows || y < 0 || y >= columns) continue;
         if (grid[x][y] == '*') continue;
-        if (dijkstra[x][y] < distance && dijkstra[x][y] != -1) continue;
+        if (dijkstra[x][y] <= distance && dijkstra[x][y] != -1) continue;
 
         dijkstra[x][y] = distance;
 
