@@ -7,9 +7,31 @@ vector<vector<int>> grid;
 vector<char> directions;
 
 int directionNum, rowNum, columnNum;
+int rightDiff = 0;
+int forwardDiff = 0;
 
 // 0 = up, 1 = right, 2 = down, 3 = left
 void traverse(int row, int column, int direction) {
+    int endRow, endColumn;
+    endRow = row; endColumn = column;
+    if (direction == 0) {
+        endRow -= forwardDiff;
+        endColumn += rightDiff;
+    } else if (direction == 1) {
+        endRow += rightDiff;
+        endColumn += forwardDiff;
+    } else if (direction == 2) {
+        endRow += forwardDiff;
+        endColumn -= rightDiff;
+    } else {
+        endRow -= rightDiff;
+        endColumn -= forwardDiff;
+    }
+
+    if (endRow < 0 || endRow >= rowNum || endColumn < 0 || endColumn >= columnNum || !grid[endRow][endColumn]) {
+        return;
+    }
+
     for (int i = 0; i < directionNum; i++) {
         char currDirection = directions[i];
 
@@ -64,6 +86,31 @@ int main() {
 
     for (int i = 0; i < directionNum; i++) {
         cin >> directions[i];
+    }
+
+    // calculateDiff
+    int currFacing = 0;
+
+    for (int i = 0; i < directionNum; i++) {
+        char currDirection = directions[i];
+
+        if (currDirection == 'L') {
+            currFacing -= 1;
+            if (currFacing < 0) currFacing = 3;
+        } else if (currDirection == 'R') {
+            currFacing += 1;
+            if (currFacing > 3) currFacing = 0;
+        } else {
+            if (currFacing == 0) {
+                forwardDiff += 1;
+            } else if (currFacing == 1) {
+                rightDiff += 1;
+            } else if (currFacing == 2) {
+                forwardDiff -= 1;
+            } else {
+                rightDiff -= 1;
+            }
+        }
     }
 
     for (int i = 0; i < rowNum; i++) {
