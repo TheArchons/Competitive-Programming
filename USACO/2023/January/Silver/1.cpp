@@ -48,17 +48,6 @@ int main() {
             }
         }
 
-        for (int i = 0; i < sLen; i++) {
-            char curr = start[i];
-            char s = curr;
-            for (int i = 0; i < sLen; i++) {
-                curr = sToE[curr];
-                if (curr == s) {
-                    extra++;
-                }
-            }
-        }
-
         cout << sToE.size() + extra << endl;
     }
 
