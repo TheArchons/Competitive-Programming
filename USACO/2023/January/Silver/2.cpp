@@ -2,98 +2,118 @@
 
 using namespace std;
 
-int total, currPrice, sideLen;
+vector<vector<int>> costs;
+vector<vector<bool>> grid; // true if right, false if down
+vector<int> endColumn, endRow;
+int totalCost = 0;
+int sideLen;
 
-vector<vector<bool>> grid; // true = right, false = down
-
-bool checkValid(int row, int col) {
-    return row >= 0 && row < sideLen && col >= 0 && col < sideLen;
+bool inBounds(int column, int row) {
+    return column >= 0 && column < sideLen && row >= 0 && row < sideLen;
 }
 
-void dfs(int row, int col){
-    total += currPrice;
-    // up
-    if (checkValid(row - 1, col)) {
-        if (!grid[row - 1][col]) {
-            dfs(row - 1, col);
-        }
+void dfs(int column, int row, int cost, int originalCost) {
+    totalCost -= originalCost;
+    totalCost += cost;
+    costs[row][column] = cost;
+
+    // top
+    row -= 1;
+    if (inBounds(column, row) && !grid[row][column]) {
+        dfs(column, row, cost, originalCost);
     }
 
     // left
-    if (checkValid(row, col - 1)) {
-        if (grid[row][col - 1]) {
-            dfs(row, col - 1);
-        }
+    row += 1;
+    column -= 1;
+
+    if (inBounds(column, row) && grid[row][column]) {
+        dfs(column, row, cost, originalCost);
     }
 }
 
-
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("2.input", "r", stdin); // for testing
+    //freopen("2.input", "r", stdin); // for testing. Comment out for submissions
 
     cin >> sideLen;
+
     grid.resize(sideLen, vector<bool>(sideLen));
-    vector<int> rightVats(sideLen);
+    endColumn.resize(sideLen);
+    endRow.resize(sideLen);
+
+
     for (int i = 0; i < sideLen; i++) {
         for (int j = 0; j < sideLen; j++) {
-            char c;
-            cin >> c;
+            char c; cin >> c;
             grid[i][j] = c == 'R';
         }
 
-        int vat;
-        cin >> vat;
-
-        rightVats[i] = vat;
+        cin >> endColumn[i];
     }
 
-    vector<int> bottomVats(sideLen);
     for (int i = 0; i < sideLen; i++) {
-        int vat;
-        cin >> vat;
-
-        bottomVats[i] = vat;
+        cin >> endRow[i];
     }
 
-    int flips;
-    cin >> flips;
-    map<vector<vector<bool>>, int> visited;
-    vector<vector<int>> carries(sideLen, vector<int>(sideLen));
+    costs.resize(sideLen, vector<int>(sideLen, 0));
 
-    for (int j = 0; j <= flips; j++) {
-        if (j != 0) {
-            int row, col;
-            cin >> row >> col;
-            row--;
-            col--;
-
-            grid[row][col] = !grid[row][col];
+    for (int i = 0; i < sideLen; i++) {
+        if (grid[i][sideLen - 1]) {
+            dfs(sideLen - 1, i, endColumn[i], 0);
         }
+    }
 
-        if (visited.find(grid) != visited.end()) {
-            cout << visited[grid] << endl;
-            continue;
+    for (int i = 0; i < sideLen; i++) {
+        if (!grid[sideLen - 1][i]) {
+            dfs(i, sideLen - 1, endRow[i], 0);
         }
+    }
 
-        total = 0;
-        for (int i = 0; i < sideLen; i++) {
-            if (grid[i][sideLen - 1]) {
-                currPrice = rightVats[i];
-                dfs(i, sideLen - 1);
+    cout << totalCost << endl;
+
+    int queryNum; cin >> queryNum;
+
+    for (int i = 0; i < queryNum; i++) {
+        int queryRow; cin >> queryRow;
+        int queryColumn; cin >> queryColumn;
+
+        queryRow--; queryColumn--;
+
+        // flip
+        grid[queryRow][queryColumn] = !grid[queryRow][queryColumn];
+
+        // traverse
+        int tempRow = queryRow;
+        int tempColumn = queryColumn;
+        int originalCost = costs[tempRow][tempColumn];
+        int newCost;
+
+        while (true) {
+            if (grid[tempRow][tempColumn]) {
+                if (inBounds(tempColumn + 1, tempRow)) {
+                    tempColumn += 1;
+                } else {
+                    break;
+                }
+            } else {
+                if (inBounds(tempColumn, tempRow + 1)) {
+                    tempRow += 1;
+                } else {
+                    break;
+                }
             }
         }
 
-        for (int i = 0; i < sideLen; i++) {
-            if (!grid[sideLen - 1][i]) {
-                currPrice = bottomVats[i];
-                dfs(sideLen - 1, i);
-            }
+        if (grid[tempRow][tempColumn]) {
+            newCost = endColumn[tempRow];
+        } else {
+            newCost = endRow[tempColumn];
         }
 
-        visited[grid] = total;
+        dfs(queryColumn, queryRow, newCost, originalCost);
 
-        cout << total << endl;
+        cout << totalCost << endl;
     }
 
     return 0;
