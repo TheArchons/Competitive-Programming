@@ -8,42 +8,13 @@ int rowNum; int columnNum;
 // Starting from any row not at the bottommost or topmost is never better than starting from the top/bottom
 //    because the previous rows can only increase the score, not decrease it
 
-vector<vector<int>> grid;
-vector<vector<int>> dp;
-
 bool inBounds(int row, int column) {
     return column >= 0 && column < columnNum && row >= 0 && row < rowNum;
 }
 
-vector<int> calcDP(int row, int column, bool goingUp, vector<int> maxVals) {
-    if (grid[row][column] == -1) {
-        return maxVals;
-    }
-
-    int maxVal = 0;
-
-    if (inBounds(row, column - 1)) {
-        maxVal = max(maxVal, dp[row][column - 1]);
-    }
-
-    if (goingUp) {
-        if (inBounds(row + 1, column)) {
-            maxVal = max(maxVal, maxVals[row + 1]);
-        }
-    } else {
-        if (inBounds(row - 1, column)) {
-            maxVal = max(maxVal, maxVals[row - 1]);
-        }
-    }
-
-    maxVals[row] = maxVal + grid[row][column];
-
-    return maxVals;
-}
-
 void solve() {
-    grid.resize(rowNum, vector<int>(columnNum, 0));
-    dp.resize(rowNum, vector<int>(columnNum, 0));
+    int grid[rowNum][columnNum] = {0};
+    int dp[rowNum][columnNum] = {0};
 
     for (int i = 0; i < rowNum; i++) {
         for (int j = 0; j < columnNum; j++) {
@@ -60,16 +31,45 @@ void solve() {
     }
 
     for (int column = 0; column < columnNum; column++) {
-        vector<int> downMaxVals(rowNum, 0);
+        int downMaxVals[rowNum] = {0};
+
         if (column) {
             for (int row = 0; row < rowNum; row++) {
-                downMaxVals = calcDP(row, column, false, downMaxVals);
+                if (grid[row][column] == -1) {
+                    continue;
+                }
+
+                int maxVal = 0;
+
+                if (inBounds(row, column - 1)) {
+                    maxVal = max(maxVal, dp[row][column - 1]);
+                }
+
+                if (inBounds(row - 1, column)) {
+                    maxVal = max(maxVal, downMaxVals[row - 1]);
+                }
+
+                downMaxVals[row] = maxVal + grid[row][column];
             }
         }
 
-        vector<int> upMaxVals(rowNum, 0);
+        int upMaxVals[rowNum] = {0};
         for (int row = rowNum - 1; row >= 0; row--) {
-            upMaxVals = calcDP(row, column, true, upMaxVals);
+            if (grid[row][column] == -1) {
+                continue;
+            }
+
+            int maxVal = 0;
+
+            if (inBounds(row, column - 1)) {
+                maxVal = max(maxVal, dp[row][column - 1]);
+            }
+
+            if (inBounds(row + 1, column)) {
+                maxVal = max(maxVal, upMaxVals[row + 1]);
+            }
+
+            upMaxVals[row] = maxVal + grid[row][column];
         }
 
         for (int i = 0; i < rowNum; i++) {
