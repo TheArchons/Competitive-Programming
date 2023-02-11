@@ -4,12 +4,20 @@ using namespace std;
 
 int maxRiceBall = 0;
 
+set<vector<int>> visited;
+
 void combineBalls(vector<int> riceBalls, int currMaxRiceBall) {
     maxRiceBall = max(maxRiceBall, currMaxRiceBall);
 
     if (riceBalls.size() == 1) {
         return;
     }
+
+    if (visited.find(riceBalls) != visited.end()) {
+        return;
+    }
+
+    visited.insert(riceBalls);
 
     int riceBallNum = riceBalls.size();
 
