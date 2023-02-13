@@ -2,15 +2,17 @@
 
 using namespace std;
 
+#define ll long long
+
 int noteNum;
 int maxPitch;
-int goodSamples;
+ll goodSamples;
 
 vector<int> notes;
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("3.input", "r", stdin); // For testing. Comment out for submissions
+    // freopen("3.input", "r", stdin); // For testing. Comment out for submissions
 
     cin >> noteNum;
     cin >> maxPitch;
@@ -18,7 +20,7 @@ int main() {
 
     notes.resize(noteNum, -1); // the first maxPitch notes are just for padding. Start at + maxPitch
 
-    int currSamples = noteNum;
+    ll currSamples = noteNum;
 
     if (goodSamples < currSamples) {
         cout << "-1\n";
