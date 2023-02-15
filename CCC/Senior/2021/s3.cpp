@@ -1,81 +1,65 @@
 #include <bits/stdc++.h>
 
-#define lld long long int
-
 using namespace std;
 
+#define ll long long
+
 struct Friend {
-    int position, walkSpeed, hearDist;
+    ll position; // Pi
+    ll secondsPerMeter; // Wi
+    ll hearingRange; // Di
 };
 
-bool operator<(const Friend& a, const Friend& b) {
-    return a.position < b.position;
+int friendNum;
+vector<Friend> friends;
+
+ll calcWalkTime(int mid) {
+    ll walkTime = 0;
+
+    for (auto currFriend : friends) {
+        int dist = abs(mid - currFriend.position) - currFriend.hearingRange;
+
+        if (dist > 0) {
+            walkTime += dist * currFriend.secondsPerMeter;
+        }
+    }
+
+    return walkTime;
 }
 
-lld max(lld a, lld b) {
-    return a > b ? a : b;
-};
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("3.input", "r", stdin); // for testing
-    
-    int friendNum;
+    //freopen("3.input", "r", stdin); // For testing. Comment out for submissions
+
     cin >> friendNum;
 
-    vector<int> diffs(2000000);
-    int minFriend, maxFriend;
-    minFriend = INT_MAX;
-    maxFriend = 0;
-    set<Friend> friends;
+    friends.resize(friendNum);
 
     for (int i = 0; i < friendNum; i++) {
-        Friend temp;
-        cin >> temp.position >> temp.walkSpeed >> temp.hearDist;
-        friends.insert(temp);
-
-        minFriend = min(minFriend, temp.position);
-        maxFriend = max(maxFriend, temp.position);
+        cin >> friends[i].position >> friends[i].secondsPerMeter >> friends[i].hearingRange;
     }
 
-    if (!friendNum) {
-        cout << 0 << endl;
-        return 0;
-    }
+    int left = 0, right = pow(10, 9);
 
-    lld minTime = 0;
-    // calculate minTime from the middle
-    for (auto it = friends.begin(); it != friends.end(); it++) {
-        minTime += max((abs(it->position - (minFriend + maxFriend)/2) - it->hearDist), 0) * it->walkSpeed;
-    }
+    ll leftTime = calcWalkTime(left);
+    ll rightTime = calcWalkTime(right);
 
-    int left, right;
-    left = minFriend;
-    right = maxFriend;
     while (left < right) {
-        lld mid = left + ((right - left) / 2);
-        lld leftTime, rightTime, leftNum;
-        leftTime = rightTime = leftNum = 0;
+        int mid = (left + right) / 2;
+        ll midTime = calcWalkTime(mid);
+        ll midTime2 = calcWalkTime(mid + 1);
 
-        for (auto it = friends.begin(); it->position < mid; it++) {
-            leftTime += max((mid - it->position - it->hearDist), 0) * it->walkSpeed;
-            leftNum++;
-        }
-
-        for (auto it = next(friends.begin(), leftNum); it != friends.end(); it++) {
-            rightTime += max((it->position - mid - it->hearDist), 0)* it->walkSpeed;
-        }
-
-        if (leftTime > rightTime) {
+        if (midTime < midTime2) { // going up
             right = mid;
-        } else {
+            rightTime = midTime;
+        } else { // going down
             left = mid + 1;
+            leftTime = midTime2;
         }
-
-        minTime = min(minTime, leftTime + rightTime);
     }
 
-    cout << minTime << endl;
+    cout << leftTime << endl;
 
     return 0;
 }
