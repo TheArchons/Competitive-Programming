@@ -42,24 +42,21 @@ int main() {
 
     int left = 0, right = pow(10, 9);
 
-    ll leftTime = calcWalkTime(left);
-    ll rightTime = calcWalkTime(right);
+    ll midTime; ll midTime2;
 
     while (left < right) {
         int mid = (left + right) / 2;
-        ll midTime = calcWalkTime(mid);
-        ll midTime2 = calcWalkTime(mid + 1);
+        midTime = calcWalkTime(mid);
+        midTime2 = calcWalkTime(mid + 1);
 
         if (midTime < midTime2) { // going up
             right = mid;
-            rightTime = midTime;
         } else { // going down
             left = mid + 1;
-            leftTime = midTime2;
         }
     }
 
-    cout << leftTime << endl;
+    cout << min(midTime, midTime2) << endl;
 
     return 0;
 }
