@@ -58,14 +58,26 @@ int main() {
     // first deal with edge cases
 
     if (!wantedRows || !wantedColumns) {
-        setC({1, 1}, {rowNum - 1, columnNum - 1}, 'b');
-        
-        if (!wantedRows && !wantedColumns) {
-            grid[0][0] = 'b';
-        } else if (!wantedRows) {
-            grid[0][1] = 'c';
+        if (wantedRows == rowNum) {
+            Point start = {0, 0};
+            Point end = {0, columnNum - 1};
+            
+            setC(start, end, 'b');
+        } else if (wantedColumns == columnNum) {
+            Point start = {0, 0};
+            Point end = {rowNum - 1, 0};
+
+            setC(start, end, 'b');
         } else {
-            grid[1][0] = 'c';
+            setC({1, 1}, {rowNum - 1, columnNum - 1}, 'b');
+            
+            if (!wantedRows && !wantedColumns) {
+                grid[0][0] = 'b';
+            } else if (!wantedRows) {
+                grid[0][1] = 'c';
+            } else {
+                grid[1][0] = 'c';
+            }
         }
 
         pGrid();
