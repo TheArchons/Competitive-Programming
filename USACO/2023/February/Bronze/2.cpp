@@ -31,10 +31,26 @@ void solve() {
     for (int rotation = 0; rotation < 4; rotation++) {
         for (int i = 0; i < gridLen - stampLen + 1; i++) {
             for (int j = 0; j < gridLen - stampLen + 1; j++) {
+                bool canStamp = true;
                 for (int k = 0; k < stampLen; k++) {
                     for (int l = 0; l < stampLen; l++) {
-                        if (grid[i + k][j + l] && stamp[k][l]) {
-                            result[i + k][j + l] = true;
+                        if (!grid[i + k][j + l] && stamp[k][l]) {
+                            canStamp = false;
+                            break;
+                        }
+                    }
+
+                    if (!canStamp) {
+                        break;
+                    }
+                }
+
+                if (canStamp) {
+                    for (int k = 0; k < stampLen; k++) {
+                        for (int l = 0; l < stampLen; l++) {
+                            if (stamp[k][l]) {
+                                result[i + k][j + l] = true;
+                            }
                         }
                     }
                 }
@@ -45,7 +61,7 @@ void solve() {
 
         for (int i = 0; i < stampLen; i++) {
             for (int j = 0; j < stampLen; j++) {
-                newStamp[i][j] = stamp[j][stampLen - 1 - i];
+                newStamp[j][stampLen - 1 - i] = stamp[i][j];
             }
         }
 
