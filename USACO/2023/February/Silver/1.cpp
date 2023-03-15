@@ -2,100 +2,54 @@
 
 using namespace std;
 
-typedef long double ll;
+typedef long long ll;
 
 struct Friend {
-    ll cookieNum;
     ll muffinNum;
-    ll maxWait;
+    ll cookieNum;
+    ll maxTime;
 };
 
-ll muffinTime;
-ll cookieTime;
-ll friendNum;
-vector<Friend> friends;
-
 void solve() {
-    cin >> friendNum;
-    cin >> cookieTime;
-    cin >> muffinTime;
+    ll friendNum; cin >> friendNum;
+    ll cookieTime; cin >> cookieTime;
+    ll muffinTime; cin >> muffinTime;
 
-    friends.resize(friendNum);
+    vector<Friend> friends(friendNum);
 
     for (ll i = 0; i < friendNum; i++) {
-        cin >> friends[i].cookieNum >> friends[i].muffinNum >> friends[i].maxWait;
+        cin >> friends[i].cookieNum >> friends[i].muffinNum >> friends[i].maxTime;
     }
 
-    ll start = 0; // TODO check if start = 1 or 0
-    ll end = cookieTime;
+    ll minSpending = INT_MAX;
 
-    ll y, y1, y2;
-    y = y1 = y2 = 0;
-
-    while (true) {
-        ll minZ = pow(10, 19);
-        ll m = floor((start+end)/2);
-
-        ll k;
-
-        bool cont = false;
-
-        for (ll i = 0; i < friendNum; i++) {
-            Friend currFriend = friends[i];
-
-            ll z = (double)(currFriend.maxWait - (currFriend.cookieNum * m))/currFriend.muffinNum;
-
-            if (z < 0) { // TODO if start = 0 z < 0
-                end = m - 1;
-                y2 = 0;
-
-                cont = true;
-                break;
+    for (ll i = 0; i <= cookieTime; i++) {
+        for (ll j = 0; j <= muffinTime; j++) {
+            // check if possible
+            bool possible = true;
+            for (ll k = 0; k < friendNum; k++) {
+                if (cookieTime - i <= 0 || muffinTime - j <= 0 || (friends[k].cookieNum * (cookieTime - i)) + (friends[k].muffinNum * (muffinTime - j)) > friends[k].maxTime) {
+                    possible = false;
+                    break;
+                }
             }
 
-            if (z < minZ) {
-                minZ = min(z, muffinTime);
-
-                k = currFriend.muffinNum - currFriend.cookieNum;
+            if (possible) {
+                minSpending = min(minSpending, i + j);
             }
         }
-
-        if (cont) {
-            continue;
-        }
-
-        minZ = floor(minZ);
-
-        y = m + minZ;
-
-        if (!k || start == m || end == m) {
-            cout << fixed << setprecision(0) << floor(cookieTime + muffinTime - y) << "\n";
-
-            return;
-        }
-
-        if (k < 0) {
-            end = m;
-
-            y2 = y;
-
-            continue;
-        }
-
-        start = m;
-        y1 = y;
     }
 
-    return;
+    cout << minSpending << endl;
 }
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    // freopen("1.input", "r", stdin); // For testing. Comment out for submissions
+    //freopen("1.input", "r", stdin); // For testing. Comment out for submissions
 
-    ll caseNum; cin >> caseNum;
+    ll testCases; cin >> testCases;
 
-    while (caseNum--) {
+    while (testCases--) {
         solve();
     }
 

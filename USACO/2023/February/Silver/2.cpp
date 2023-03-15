@@ -2,10 +2,12 @@
 
 using namespace std;
 
+typedef long double ll;
+
 struct CowLocation {
-    int x;
-    int y;
-    int time;
+    ll x;
+    ll y;
+    ll time;
 };
 
 struct CowLocationCompare {
@@ -16,27 +18,27 @@ struct CowLocationCompare {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("2.input", "r", stdin); // For testing. Comment out for submissions
+    // freopen("2.input", "r", stdin); // For testing. Comment out for submissions
 
-    int grazeNum; cin >> grazeNum;
-    int cowNum; cin >> cowNum;
+    ll grazeNum; cin >> grazeNum;
+    ll cowNum; cin >> cowNum;
 
-    set<CowLocation, CowLocationCompare> grazeTimes;
+    multiset<CowLocation, CowLocationCompare> grazeTimes;
 
-    for (int i = 0; i < grazeNum; i++) {
-        int x; cin >> x;
-        int y; cin >> y;
-        int time; cin >> time;
+    for (ll i = 0; i < grazeNum; i++) {
+        ll x; cin >> x;
+        ll y; cin >> y;
+        ll time; cin >> time;
 
         grazeTimes.insert({x, y, time});
     }
 
-    int innoCount = 0;
+    ll innoCount = 0;
 
-    for (int i = 0; i < cowNum; i++) {
-        int x; cin >> x;
-        int y; cin >> y;
-        int time; cin >> time;
+    for (ll i = 0; i < cowNum; i++) {
+        ll x; cin >> x;
+        ll y; cin >> y;
+        ll time; cin >> time;
 
         CowLocation cow = {x, y, time};
 
@@ -53,11 +55,11 @@ int main() {
                 continue;
             }
 
-            int dist = abs(graze.x - cow.x) + abs(graze.y - cow.y);
+            // ll dist = abs(graze.x - cow.x) + abs(graze.y - cow.y);
 
 
             // TODO check for diagonal dist
-            // int dist = sqrt(pow(graze.x - cow.x, 2) + pow(graze.y - cow.y, 2));
+            ll dist = ceil((long double)sqrt(pow(graze.x - cow.x, 2) + pow(graze.y - cow.y, 2)));
 
             if (dist > graze.time - cow.time) {
                 innoCount++;
@@ -70,10 +72,10 @@ int main() {
             it--;
             CowLocation graze = *it;
 
-            int dist = abs(graze.x - cow.x) + abs(graze.y - cow.y);
+            // ll dist = abs(graze.x - cow.x) + abs(graze.y - cow.y);
 
             // TODO check for diagonal dist
-            // int dist = sqrt(pow(graze.x - cow.x, 2) + pow(graze.y - cow.y, 2));
+            ll dist = ceil((long double)sqrt(pow(graze.x - cow.x, 2) + pow(graze.y - cow.y, 2)));
 
             if (dist > cow.time - graze.time) {
                 innoCount++;
