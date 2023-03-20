@@ -10,42 +10,76 @@ struct Friend {
     ll maxTime;
 };
 
-void solve() {
-    ll friendNum; cin >> friendNum;
-    ll cookieTime; cin >> cookieTime;
-    ll muffinTime; cin >> muffinTime;
+vector<Friend> friends;
+ll friendNum;
+ll cookieTime;
+ll muffinTime;
 
-    vector<Friend> friends(friendNum);
+bool check(ll money) {
+    ll greater = max(0LL, money - muffinTime + 1); ll less = min(money, cookieTime - 1);
+
+    for (ll i = 0; i < friendNum; i++) {
+        Friend cf = friends[i];
+        ll currCookieTime, currMuffinTime;
+
+        if (cf.cookieNum == cf.muffinNum) {
+            if (cookieTime <= money) {
+                currCookieTime = 1;
+                currMuffinTime = muffinTime - (money - (cookieTime - 1));
+            } else {
+                currCookieTime = cookieTime - money;
+                currMuffinTime = muffinTime;
+            }
+
+            // if possible
+            if (cf.cookieNum*currCookieTime + cf.muffinNum*currMuffinTime <= cf.maxTime) {
+                continue;
+            } else {
+                return false;
+            }
+        } else if (cf.cookieNum > cf.muffinNum) {
+            ll currGreater = ceil(((double)((cookieTime * cf.cookieNum + muffinTime * cf.muffinNum - cf.maxTime) - money*cf.muffinNum ))/(cf.cookieNum - cf.muffinNum));
+            greater = max(greater, currGreater);
+        } else {
+            ll currLess = floor(((double)((cookieTime * cf.cookieNum + muffinTime * cf.muffinNum - cf.maxTime) - money*cf.muffinNum ))/(cf.cookieNum - cf.muffinNum));
+            less = min(less, currLess);
+        }
+    }
+
+    return greater <= less;
+}
+
+void solve() {
+    cin >> friendNum;
+    cin >> cookieTime;
+    cin >> muffinTime;
+
+    friends.resize(friendNum);
 
     for (ll i = 0; i < friendNum; i++) {
         cin >> friends[i].cookieNum >> friends[i].muffinNum >> friends[i].maxTime;
     }
 
-    ll minSpending = INT_MAX;
+    // binsearch for optimal money spending
 
-    for (ll i = 0; i <= cookieTime; i++) {
-        for (ll j = 0; j <= muffinTime; j++) {
-            // check if possible
-            bool possible = true;
-            for (ll k = 0; k < friendNum; k++) {
-                if (cookieTime - i <= 0 || muffinTime - j <= 0 || (friends[k].cookieNum * (cookieTime - i)) + (friends[k].muffinNum * (muffinTime - j)) > friends[k].maxTime) {
-                    possible = false;
-                    break;
-                }
-            }
-
-            if (possible) {
-                minSpending = min(minSpending, i + j);
-            }
+    ll left = 0;
+    ll right = cookieTime + muffinTime - 2;
+    while (left < right) {
+        ll mid = (left + right) / 2;
+        
+        if (check(mid)) {
+            right = mid;
+        } else {
+            left = mid + 1;
         }
     }
 
-    cout << minSpending << endl;
+    cout << left << endl;
 }
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    //freopen("1.input", "r", stdin); // For testing. Comment out for submissions
+    // freopen("1.input", "r", stdin); // For testing. Comment out for submissions
 
     ll testCases; cin >> testCases;
 
