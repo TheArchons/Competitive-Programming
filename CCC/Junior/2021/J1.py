@@ -1,4 +1,4 @@
-pressure = int(input(""))*5-400
+pressure = int(input())*5-400
 print(pressure)
 if pressure > 100:
     print(-1)
