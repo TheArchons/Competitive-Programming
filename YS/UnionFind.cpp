@@ -39,7 +39,7 @@ void setunion(int v1, int v2) {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    // freopen("unionfind.input", "r", stdin); // For testing. Comment out for submissions
+    // freopen("UnionFind.input", "r", stdin); // For testing. Comment out for submissions
 
     int verticiesNum; cin >> verticiesNum;
     int queryNum; cin >> queryNum;
