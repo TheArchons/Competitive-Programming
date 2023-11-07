@@ -24,13 +24,16 @@ void setunion(int v1, int v2) {
     v1rep = find(v1);
     v2rep = find(v2);
 
-    if (heights[v1rep] == heights[v2rep]) { // if the height of the v1 > v2, v2 -> v1
-        heights[v1rep]++;
+    if (v1rep != v2rep) {
+        // we want to skip this because this will add a height when joining itself
+        if (v1rep < v2rep) {
+            swap(v1rep, v2rep);
+        }
         ds[v2rep] = v1rep;
-    } else if (heights[v1rep] > heights[v2rep]) {
-        ds[v2rep] = v1rep;
-    } else {
-        ds[v1rep] = v2rep;
+
+        if (heights[v1rep] == heights[v2rep]) {
+            heights[v1rep]++;
+        }
     }
 }
 
