@@ -48,12 +48,13 @@ ll powMod(ll base, ll exp, ll modVal) {
         return 1;
     }
 
-    ll halfPow = powMod(base, exp / 2, modVal) % modVal;
+    ll halfPow = powMod(base, exp / 2, modVal);
+    halfPow = halfPow * halfPow % modVal;
     if (exp % 2) { // exp is odd
-        return halfPow * halfPow * base;
-    } else {
-        return halfPow * halfPow;
+        halfPow = halfPow * base % modVal;
     }
+
+    return halfPow % modVal;
 }
 
 void initDs() {
@@ -88,7 +89,7 @@ int main() {
             ballEdge currEdge;
             currEdge.ball1 = i;
             currEdge.ball2 = j;
-            currEdge.score = ((powMod(currBall, ball2, maxInt) % maxInt) + (powMod(ball2, currBall, maxInt) % maxInt)) % maxInt;
+            currEdge.score = (powMod(currBall, ball2, maxInt) + powMod(ball2, currBall, maxInt)) % maxInt;
 
             ballEdges.push(currEdge);
         }
