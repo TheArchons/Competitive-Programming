@@ -43,6 +43,19 @@ void unionBalls(int rep1, int rep2) {
     return;
 }
 
+ll powMod(ll base, ll exp, ll modVal) {
+    if (!exp) {
+        return 1;
+    }
+
+    ll halfPow = powMod(base, exp / 2, modVal) % modVal;
+    if (exp % 2) { // exp is odd
+        return halfPow * halfPow * base;
+    } else {
+        return halfPow * halfPow;
+    }
+}
+
 void initDs() {
     for (int i = 0; i < maxBallNum; i++) {
         ds[i] = i;
@@ -51,7 +64,7 @@ void initDs() {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    freopen("e.input", "r", stdin); // For testing. Comment out for submissions
+    // freopen("e.input", "r", stdin); // For testing. Comment out for submissions
 
     initDs();
 
@@ -75,7 +88,7 @@ int main() {
             ballEdge currEdge;
             currEdge.ball1 = i;
             currEdge.ball2 = j;
-            currEdge.score = (ll)(pow(currBall, ball2) + pow(ball2, currBall)) % maxInt;
+            currEdge.score = ((powMod(currBall, ball2, maxInt) % maxInt) + (powMod(ball2, currBall, maxInt) % maxInt)) % maxInt;
 
             ballEdges.push(currEdge);
         }
