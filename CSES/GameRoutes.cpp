@@ -22,6 +22,8 @@ int main() {
     vector<bool> visited(levelNum, false);
     vector<int> topoLevels;
 
+    int onePos;
+
     for (int i = 0; i < levelNum; i++) {
         if (visited[i]) {
             continue;
@@ -42,15 +44,21 @@ int main() {
 
                 if (visited[next]) continue;
 
+                visited[next] = true;
+
                 found = true;
 
                 path.push(next);
+
+                break;
             }
 
             if (!found) {
                 topoLevels.push_back(curr);
-                visited[curr] = true;
                 path.pop();
+                if (curr == 0) {
+                    onePos = levelNum - topoLevels.size();
+                }
             }
         }
     }
@@ -61,8 +69,8 @@ int main() {
 
     dp[0] = 1;
 
-    for (int i = 0; i < levelNum; i++) {
-        ll curr = topoLevels[i];
+    for (int i = onePos; i < levelNum; i++) {
+        int curr = topoLevels[i];
 
         for (int j = 0; j < teleports[curr].size(); j++) {
             int next = teleports[curr][j];
