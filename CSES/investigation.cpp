@@ -13,7 +13,7 @@ struct flight {
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
-    // freopen("investigation.input", "r", stdin); // For testing. Comment out for submissions
+    freopen("investigation.input", "r", stdin); // For testing. Comment out for submissions
 
     ll cityNum; cin >> cityNum; ll flightNum; cin >> flightNum;
 
@@ -35,15 +35,16 @@ int main() {
 
     vector<set<ll>> minimumFlights(cityNum);
 
-    queue<ll> q;
-    q.push(0);
+    priority_queue<pair<ll, ll>, vector<pair<ll, ll>>, greater<pair<ll, ll>>> q;
+    q.push({0, 0});
 
     vector<ll> minCosts(cityNum, ll_MAX);
     minCosts[0] = 0;
 
     while(!q.empty()) {
-        ll curr = q.front(); q.pop();
-        ll currCost = minCosts[curr];
+        ll curr = q.top().second;
+        ll currCost = q.top().first;
+        q.pop();
 
         for (ll i = 0; i < flights[curr].size(); i++) {
             flight next = flights[curr][i];
@@ -51,7 +52,7 @@ int main() {
 
             if (minCosts[next.end] > nextCost) {
                 minimumFlights[next.end].clear();
-                q.push(next.end);
+                q.push({nextCost, next.end});
                 minCosts[next.end] = nextCost;
             } else if (minCosts[next.end] < nextCost) continue;
 
