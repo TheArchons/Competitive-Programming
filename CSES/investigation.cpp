@@ -3,26 +3,27 @@
 using namespace std;
 
 typedef long long ll;
+ll ll_MAX = LONG_LONG_MAX;
 
 struct flight {
-    int start;
-    int end;
-    int cost;
+    ll start;
+    ll end;
+    ll cost;
 };
 
 int main() {
     cin.sync_with_stdio(0); cin.tie(0);
     // freopen("investigation.input", "r", stdin); // For testing. Comment out for submissions
 
-    int cityNum; cin >> cityNum; int flightNum; cin >> flightNum;
+    ll cityNum; cin >> cityNum; ll flightNum; cin >> flightNum;
 
     vector<vector<flight>> flights(cityNum);
 
-    for (int i = 0; i < flightNum; i++) {
-        int start; cin >> start;
-        int end; cin >> end;
+    for (ll i = 0; i < flightNum; i++) {
+        ll start; cin >> start;
+        ll end; cin >> end;
         start--; end--;
-        int cost; cin >> cost;
+        ll cost; cin >> cost;
 
         flight currFlight;
         currFlight.start = start;
@@ -30,29 +31,23 @@ int main() {
         currFlight.cost = cost;
 
         flights[start].push_back(currFlight);
-
-        // reverse flight
-        currFlight.start = end;
-        currFlight.end = start;
-
-        flights[end].push_back(currFlight);
     }
 
-    vector<vector<int>> minimumFlights(cityNum);
+    vector<set<ll>> minimumFlights(cityNum);
 
-    queue<int> q;
+    queue<ll> q;
     q.push(0);
 
-    vector<int> minCosts(cityNum, INT_MAX);
+    vector<ll> minCosts(cityNum, ll_MAX);
     minCosts[0] = 0;
 
     while(!q.empty()) {
-        int curr = q.front(); q.pop();
-        int currCost = minCosts[curr];
+        ll curr = q.front(); q.pop();
+        ll currCost = minCosts[curr];
 
-        for (int i = 0; i < flights[curr].size(); i++) {
+        for (ll i = 0; i < flights[curr].size(); i++) {
             flight next = flights[curr][i];
-            int nextCost = currCost + next.cost;
+            ll nextCost = currCost + next.cost;
 
             if (minCosts[next.end] > nextCost) {
                 minimumFlights[next.end].clear();
@@ -60,45 +55,43 @@ int main() {
                 minCosts[next.end] = nextCost;
             } else if (minCosts[next.end] < nextCost) continue;
 
-            minimumFlights[next.end].push_back(curr);
+            minimumFlights[next.end].insert(curr);
         }
     }
 
     cout << minCosts[cityNum - 1] << " ";
 
     // construct graph based on minimumFlights
-    vector<vector<int>> minFlightGraph(cityNum);
+    vector<vector<ll>> minFlightGraph(cityNum);
 
-    for (int i = 0; i < cityNum; i++) {
-        for (int j = 0; j < minimumFlights[i].size(); j++) {
-            int start = minimumFlights[i][j];
-
-            minFlightGraph[start].push_back(i);
+    for (ll i = 0; i < cityNum; i++) {
+        for (auto it : minimumFlights[i]) {
+            minFlightGraph[it].push_back(i);
         }
     }
 
     // # of minimum-price routes
 
     // topo sort
-    vector<int> topoGraph;
+    vector<ll> topoGraph;
     vector<bool> visited(cityNum, false);
 
-    for (int i = 0; i < cityNum; i++) {
-        if (visited[cityNum]) continue;
+    for (ll i = 0; i < cityNum; i++) {
+        if (visited[i]) continue;
 
-        visited[cityNum] = true;
+        visited[i] = true;
 
-        stack<int> path;
+        stack<ll> path;
 
         path.push(i);
 
         while (!path.empty()) {
-            int curr = path.top();
+            ll curr = path.top();
 
             bool found = false;
 
-            for (int j = 0; j < minFlightGraph[curr].size(); j++) {
-                int next = minFlightGraph[curr][j];
+            for (ll j = 0; j < minFlightGraph[curr].size(); j++) {
+                ll next = minFlightGraph[curr][j];
 
                 if (visited[next]) continue;
                 visited[next] = true;
@@ -119,21 +112,21 @@ int main() {
     reverse(topoGraph.begin(), topoGraph.end());
 
     // dp
-    vector<int> routeNum(cityNum, 0);
+    vector<ll> routeNum(cityNum, 0);
     routeNum[0] = 1;
 
-    vector<int> shortestPath(cityNum, INT_MAX);
+    vector<ll> shortestPath(cityNum, ll_MAX);
     shortestPath[0] = 0;
 
-    vector<int> longestPath(cityNum, 0);
+    vector<ll> longestPath(cityNum, 0);
 
-    for (int i = 0; i < cityNum; i++) {
-        int curr = topoGraph[i];
-        int currShortest = shortestPath[curr] + 1;
-        int currLongest = longestPath[curr] + 1;
+    for (ll i = 0; i < cityNum; i++) {
+        ll curr = topoGraph[i];
+        ll currShortest = shortestPath[curr] + 1;
+        ll currLongest = longestPath[curr] + 1;
 
-        for (int j = 0; j < minFlightGraph[curr].size(); j++) {
-            int next = minFlightGraph[curr][j];
+        for (ll j = 0; j < minFlightGraph[curr].size(); j++) {
+            ll next = minFlightGraph[curr][j];
 
             routeNum[next] += routeNum[curr];
             routeNum[next] = routeNum[next] % ll(pow(10, 9) + 7);
