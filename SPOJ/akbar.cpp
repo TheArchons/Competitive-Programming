@@ -2,10 +2,6 @@
 
 using namespace std;
 
-struct soldier {
-    int city;
-    int strength;
-};
 
 bool solve() {
     int numCities; cin >> numCities;
@@ -25,7 +21,7 @@ bool solve() {
         graph[city2].push_back(city1);
     }
 
-    vector<soldier> soldiers(numSoldiers);
+    vector<bool> cityHasSoldier(numCities);
 
     for (int i = 0; i < numSoldiers; i++) {
         int city; cin >> city;
@@ -33,30 +29,24 @@ bool solve() {
 
         city--;
 
-        soldiers[i] = {city, strength};
-    }
-
-    vector<bool> cityHasSoldier(numCities);
-
-    for (soldier currSoldier : soldiers) {
-        if (cityHasSoldier[currSoldier.city]) { // already covered by another soldier
+        if (cityHasSoldier[city]) { // already covered by another soldier
             return false;
         }
 
         queue<int> cityQ;
-        cityQ.push(currSoldier.city);
+        cityQ.push(city);
         
-        vector<int> distanceToBase(numCities);
-        vector<bool> currentSoliderHasCovered(numCities);
-        currentSoliderHasCovered[currSoldier.city] = true;
+        unordered_map<int, int> distanceToBase;
+        unordered_set<int> currentSoliderHasCovered;
+        currentSoliderHasCovered.insert(city);
 
-        cityHasSoldier[currSoldier.city] = true;
+        cityHasSoldier[city] = true;
 
         while (!cityQ.empty()) {
             int currCity = cityQ.front(); cityQ.pop();
 
             for (int nextCity : graph[currCity]) {
-                if (currentSoliderHasCovered[nextCity] || distanceToBase[currCity] + 1 > currSoldier.strength) { // already covered by current soldier or out of the current soldier's area
+                if (currentSoliderHasCovered.find(nextCity) != currentSoliderHasCovered.end() || distanceToBase[currCity] + 1 > strength) { // already covered by current soldier or out of the current soldier's area
                     continue;
                 }
 
@@ -67,7 +57,7 @@ bool solve() {
                 cityQ.push(nextCity);
                 cityHasSoldier[nextCity] = true;
                 distanceToBase[nextCity] = distanceToBase[currCity] + 1;
-                currentSoliderHasCovered[nextCity] = true;
+                currentSoliderHasCovered.insert(nextCity);
             }
         }
     }
